@@ -1,6 +1,6 @@
 /**
  * Site-wide settings. Edit this file to change the name, bio, email, and profile links.
- * The home page photo is src/assets/michael.jpg (a square image around 600 pixels wide is enough).
+ * The home page photo is src/assets/michael.jpg (a 3:4 portrait, about 600 pixels wide).
  */
 export const site = {
   name: 'Michael Brady',

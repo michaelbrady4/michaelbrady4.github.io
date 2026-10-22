@@ -6,7 +6,7 @@ Published at <https://michaelbrady4.github.io>.
 
 ## Edit the site
 
-Name, bio, email, and profile links are in [`src/site.ts`](src/site.ts). The home page photo is [`src/assets/michael.jpg`](src/assets/michael.jpg). A square photo about 600 pixels wide is enough; the site displays it as a circle.
+Name, bio, email, and profile links are in [`src/site.ts`](src/site.ts). The home page photo is [`src/assets/michael.jpg`](src/assets/michael.jpg). A 3:4 photo about 600 pixels wide is enough; the site shows it as a rounded portrait.
 
 ## Write a post
 
