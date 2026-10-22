@@ -5,4 +5,13 @@ export default defineConfig({
   site: 'https://michaelbrady4.github.io',
   output: 'static',
   trailingSlash: 'always',
+  markdown: {
+    shikiConfig: {
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark',
+      },
+      defaultColor: false,
+    },
+  },
 });

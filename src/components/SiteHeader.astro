@@ -6,6 +6,20 @@ const blogActive = pathname.startsWith('/blog');
 
 <header class="site-header">
   <nav class="site-nav" aria-label="Primary">
+    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch color theme">
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          fill="currentColor"
+          d="M21 14.6A8.2 8.2 0 0 1 9.4 3a7.2 7.2 0 1 0 11.6 11.6Z"></path>
+      </svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
+        <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2"></path>
+          <path d="m5.1 5.1 1.6 1.6M17.3 17.3l1.6 1.6M18.9 5.1l-1.6 1.6M6.7 17.3l-1.6 1.6"></path>
+        </g>
+      </svg>
+    </button>
     <ul>
       <li>
         <a href="/" class:list={{ active: homeActive }} aria-current={homeActive ? 'page' : undefined}>Home</a>
@@ -22,3 +36,54 @@ const blogActive = pathname.startsWith('/blog');
     </ul>
   </nav>
 </header>
+<script is:inline>
+  (function () {
+    var button = document.getElementById('theme-toggle');
+    if (!button) return;
+
+    function systemTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function currentTheme() {
+      var attr = document.documentElement.getAttribute('data-theme');
+      return attr === 'dark' || attr === 'light' ? attr : systemTheme();
+    }
+
+    function label(theme) {
+      return theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+    }
+
+    function apply(theme, persist) {
+      var root = document.documentElement;
+      root.setAttribute('data-theme', theme);
+      root.style.colorScheme = theme;
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', theme === 'dark' ? '#12141c' : '#ffffff');
+      button.setAttribute('aria-label', label(theme));
+      if (persist) {
+        try {
+          localStorage.setItem('theme', theme);
+        } catch (e) {}
+      }
+    }
+
+    apply(currentTheme(), false);
+
+    button.addEventListener('click', function () {
+      apply(currentTheme() === 'dark' ? 'light' : 'dark', true);
+    });
+
+    var media = window.matchMedia('(prefers-color-scheme: dark)');
+    if (media.addEventListener) {
+      media.addEventListener('change', function () {
+        var stored = null;
+        try {
+          stored = localStorage.getItem('theme');
+        } catch (e) {}
+        if (stored === 'light' || stored === 'dark') return;
+        apply(systemTheme(), false);
+      });
+    }
+  })();
+</script>

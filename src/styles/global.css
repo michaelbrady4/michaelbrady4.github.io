@@ -6,7 +6,32 @@
   --line: #ececec;
   --wash: #f4f5f7;
   --bg: #ffffff;
+  --theme-color: #ffffff;
   --measure: 40rem;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --ink: #f2f3f6;
+  --ink-soft: #d5d8e0;
+  --muted: #b7bec9;
+  --line: #2c3140;
+  --wash: #1c2030;
+  --bg: #12141c;
+  --theme-color: #12141c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --ink: #f2f3f6;
+    --ink-soft: #d5d8e0;
+    --muted: #b7bec9;
+    --line: #2c3140;
+    --wash: #1c2030;
+    --bg: #12141c;
+    --theme-color: #12141c;
+  }
 }
 
 *,
@@ -17,6 +42,7 @@
 
 html {
   scroll-behavior: smooth;
+  background: var(--bg);
 }
 
 body {
@@ -46,7 +72,7 @@ a {
   z-index: 10;
   padding: 0.45rem 0.75rem;
   background: var(--ink);
-  color: #fff;
+  color: var(--bg);
   border-radius: 6px;
   text-decoration: none;
 }
@@ -67,6 +93,13 @@ a {
   border-bottom: 1px solid var(--line);
 }
 
+.site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .site-nav ul {
   display: flex;
   justify-content: flex-end;
@@ -74,6 +107,51 @@ a {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.theme-toggle svg {
+  grid-area: 1 / 1;
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.theme-toggle .icon-sun {
+  display: none;
+}
+
+[data-theme='dark'] .theme-toggle .icon-moon {
+  display: none;
+}
+
+[data-theme='dark'] .theme-toggle .icon-sun {
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .theme-toggle .icon-moon {
+    display: none;
+  }
+
+  :root:not([data-theme='light']) .theme-toggle .icon-sun {
+    display: block;
+  }
+}
+
+.theme-toggle:hover {
+  background: var(--wash);
 }
 
 .site-nav a {
@@ -368,6 +446,36 @@ a {
   font-size: 0.86rem;
 }
 
+/* Shiki emits both palettes; pick the one that matches the active theme. */
+.astro-code,
+.astro-code span {
+  color: var(--shiki-light) !important;
+  background-color: var(--shiki-light-bg) !important;
+  font-style: var(--shiki-light-font-style) !important;
+  font-weight: var(--shiki-light-font-weight) !important;
+  text-decoration: var(--shiki-light-text-decoration) !important;
+}
+
+[data-theme='dark'] .astro-code,
+[data-theme='dark'] .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .astro-code,
+  :root:not([data-theme='light']) .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+}
+
 .site-footer {
   padding: 2.5rem 0 2rem;
   color: var(--muted);
@@ -420,6 +528,11 @@ a {
 
   .site-nav a {
     padding: 0.55rem 0.7rem;
+  }
+
+  .theme-toggle {
+    width: 2.75rem;
+    height: 2.75rem;
   }
 }
 
