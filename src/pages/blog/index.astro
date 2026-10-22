@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatDate, isoDate } from '../../lib/dates';
+import { getPosts } from '../../lib/posts';
+
+const posts = await getPosts();
+---
+
+<BaseLayout title="Blog" description="Notes and posts by Michael Brady.">
+  <div class="page-heading">
+    <h1 class="page-title">Blog</h1>
+    {
+      posts.length === 0 ? (
+        <p class="empty">No posts yet.</p>
+      ) : (
+        <ul class="post-list">
+          {posts.map((post) => (
+            <li>
+              <a class="post-link" href={`/blog/${post.id}/`}>
+                <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+                <h2>{post.data.title}</h2>
+                {post.data.description && <span class="post-description">{post.data.description}</span>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</BaseLayout>

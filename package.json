@@ -1,0 +1,18 @@
+{
+  "name": "michaelbrady4.github.io",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal website and blog for Michael Brady.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview --host 127.0.0.1 --port 4321"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "astro": "^7.4.2"
+  }
+}

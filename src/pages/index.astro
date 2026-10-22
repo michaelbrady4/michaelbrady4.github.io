@@ -1,0 +1,25 @@
+---
+import { Image } from 'astro:assets';
+import headshot from '../assets/michael.jpg';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import { site } from '../site';
+---
+
+<BaseLayout>
+  <section class="intro">
+    <Image
+      src={headshot}
+      alt={site.name}
+      width={72}
+      height={72}
+      densities={[1, 2]}
+      class="avatar"
+      loading="eager"
+      decoding="async"
+    />
+    <h1>{site.name}</h1>
+    <p class="bio">{site.bio}</p>
+    <SocialLinks />
+  </section>
+</BaseLayout>
