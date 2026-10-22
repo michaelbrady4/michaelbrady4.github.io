@@ -105,12 +105,12 @@ a {
 }
 
 .avatar {
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 168px;
+  height: 168px;
   margin: 0 auto 1.15rem;
   border-radius: 50%;
   object-fit: cover;
-  object-position: center;
+  object-position: center center;
   background: var(--wash);
 }
 
@@ -403,6 +403,11 @@ a {
 
   .intro {
     padding-top: 3.25rem;
+  }
+
+  .avatar {
+    width: 140px;
+    height: 140px;
   }
 
   .icon-control {
