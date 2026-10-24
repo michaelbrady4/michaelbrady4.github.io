@@ -208,16 +208,25 @@ a {
 }
 
 .bio {
-  max-width: 34rem;
-  margin: 0.9rem auto 0;
+  max-width: 36rem;
+  margin: 1.1rem auto 0;
   color: var(--ink);
   font-size: 1.05rem;
   line-height: 1.7;
+  text-align: left;
+}
+
+.bio p {
+  margin: 0;
+}
+
+.bio p + p {
+  margin-top: 0.95rem;
 }
 
 .social {
   position: relative;
-  margin-top: 1.2rem;
+  margin-top: 1.6rem;
   padding-bottom: 1.65rem;
 }
 
@@ -519,6 +528,15 @@ a {
     width: 240px;
     height: 320px;
     border-radius: 26px;
+  }
+
+  .bio {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .bio p + p {
+    margin-top: 0.85rem;
   }
 
   .icon-control {

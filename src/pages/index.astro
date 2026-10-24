@@ -19,7 +19,9 @@ import { site } from '../site';
       decoding="async"
     />
     <h1>{site.name}</h1>
-    <p class="bio">{site.bio}</p>
+    <div class="bio">
+      {site.bio.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
     <SocialLinks />
   </section>
 </BaseLayout>
