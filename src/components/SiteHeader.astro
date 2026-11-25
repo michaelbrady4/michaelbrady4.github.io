@@ -1,6 +1,4 @@
 ---
-import { Image } from 'astro:assets';
-import headshot from '../assets/michael.jpg';
 import { site } from '../site';
 
 const pathname = Astro.url.pathname;
@@ -10,23 +8,7 @@ const blogActive = pathname.startsWith('/blog');
 
 <header class="site-header">
   <nav class="site-nav" aria-label="Primary">
-    <a class="brand" href="/">
-      <Image
-        src={headshot}
-        alt=""
-        width={32}
-        height={32}
-        densities={[1, 2]}
-        quality={70}
-        format="webp"
-        fit="cover"
-        position="attention"
-        class="brand-avatar"
-        loading="eager"
-        decoding="async"
-      />
-      <span class="brand-name">{site.name}</span>
-    </a>
+    <a class="brand" href="/">{site.name}</a>
     <div class="nav-end">
       <ul>
         <li>
