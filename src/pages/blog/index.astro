@@ -7,19 +7,34 @@ const posts = await getPosts();
 ---
 
 <BaseLayout title="Blog" description="Notes and posts by Michael Brady.">
-  <div class="page-heading">
-    <h1 class="page-title">Blog</h1>
+  <div class="page">
+    <header class="page-heading reveal">
+      <h1 class="page-title">Blog</h1>
+    </header>
     {
       posts.length === 0 ? (
-        <p class="empty">Posts coming soon.</p>
+        <p class="empty reveal" style="--d: 80ms">
+          Posts coming soon.
+        </p>
       ) : (
         <ul class="post-list">
           {posts.map((post) => (
-            <li>
-              <a class="post-link" href={`/blog/${post.id}/`}>
+            <li data-reveal>
+              <a class="post-card" href={`/blog/${post.id}/`}>
                 <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
                 <h2>{post.data.title}</h2>
-                {post.data.description && <span class="post-description">{post.data.description}</span>}
+                {post.data.description && <p class="post-description">{post.data.description}</p>}
+                <span class="card-go" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" focusable="false">
+                    <path
+                      d="M3 8h10M9 4l4 4-4 4"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"></path>
+                  </svg>
+                </span>
               </a>
             </li>
           ))}

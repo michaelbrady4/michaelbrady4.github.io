@@ -7,21 +7,26 @@ import { site } from '../site';
 ---
 
 <BaseLayout>
-  <section class="intro">
-    <Image
-      src={headshot}
-      alt={site.name}
-      width={300}
-      height={400}
-      densities={[1, 2]}
-      class="portrait"
-      loading="eager"
-      decoding="async"
-    />
-    <h1>{site.name}</h1>
-    <div class="bio">
-      {site.bio.map((paragraph) => <p>{paragraph}</p>)}
+  <section class="intro reveal">
+    <div class="portrait-wrap">
+      <Image
+        src={headshot}
+        alt={site.name}
+        width={300}
+        height={400}
+        densities={[1, 2]}
+        class="portrait"
+        loading="eager"
+        decoding="async"
+        fetchpriority="high"
+      />
     </div>
-    <SocialLinks />
+    <div class="intro-copy">
+      <h1>{site.name}</h1>
+      <div class="bio">
+        {site.bio.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+      <SocialLinks />
+    </div>
   </section>
 </BaseLayout>

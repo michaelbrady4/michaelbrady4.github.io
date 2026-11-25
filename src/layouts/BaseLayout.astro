@@ -22,7 +22,14 @@ const canonical = new URL(Astro.url.pathname, site.url);
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#f3f1ec" />
+    <link
+      rel="preload"
+      href="/fonts/geist-latin-wght-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <script is:inline>
       (function () {
         try {
@@ -37,7 +44,7 @@ const canonical = new URL(Astro.url.pathname, site.url);
           root.setAttribute('data-theme', theme);
           root.style.colorScheme = theme;
           var meta = document.querySelector('meta[name="theme-color"]');
-          if (meta) meta.setAttribute('content', theme === 'dark' ? '#12141c' : '#ffffff');
+          if (meta) meta.setAttribute('content', theme === 'dark' ? '#0e0f12' : '#f3f1ec');
         } catch (e) {}
       })();
     </script>
@@ -54,5 +61,46 @@ const canonical = new URL(Astro.url.pathname, site.url);
       <slot />
     </main>
     <SiteFooter />
+    <script is:inline>
+      (function () {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var nodes = document.querySelectorAll('[data-reveal]');
+        if (!nodes.length) return;
+
+        var vh = window.innerHeight || document.documentElement.clientHeight;
+        var pending = [];
+
+        for (var i = 0; i < nodes.length; i++) {
+          var node = nodes[i];
+          if (node.getBoundingClientRect().top > vh * 0.88) {
+            node.classList.add('is-pending');
+            pending.push(node);
+          } else {
+            node.classList.add('reveal');
+          }
+        }
+
+        if (!pending.length || !('IntersectionObserver' in window)) {
+          for (var j = 0; j < pending.length; j++) pending[j].classList.add('reveal');
+          return;
+        }
+
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.remove('is-pending');
+              entry.target.classList.add('reveal');
+              observer.unobserve(entry.target);
+            });
+          },
+          { threshold: 0.2, rootMargin: '0px 0px -5% 0px' }
+        );
+
+        pending.forEach(function (node) {
+          observer.observe(node);
+        });
+      })();
+    </script>
   </body>
 </html>
