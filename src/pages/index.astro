@@ -3,6 +3,8 @@ import { Image } from 'astro:assets';
 import headshot from '../assets/michael.jpg';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SocialLinks from '../components/SocialLinks.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects } from '../projects';
 import { site } from '../site';
 ---
 
@@ -28,5 +30,20 @@ import { site } from '../site';
       </div>
       <SocialLinks />
     </div>
+  </section>
+  <section class="project-preview" aria-labelledby="selected-projects">
+    <div class="project-preview-head reveal">
+      <h2 id="selected-projects">Selected projects</h2>
+      <a href="/projects/">All projects</a>
+    </div>
+    <ul class="project-list">
+      {
+        projects.map((project) => (
+          <li data-reveal>
+            <ProjectCard project={project} heading="h3" />
+          </li>
+        ))
+      }
+    </ul>
   </section>
 </BaseLayout>

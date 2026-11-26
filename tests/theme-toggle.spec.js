@@ -81,7 +81,7 @@ async function fresh(page, path, scheme) {
 }
 
 test('toggle icon stays visible from a light preference', async ({ page }) => {
-  for (const path of ['/blog/', '/']) {
+  for (const path of ['/blog/', '/projects/', '/']) {
     await fresh(page, path, 'light');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
     await expectVisibleIcon(page);
@@ -95,7 +95,7 @@ test('toggle icon stays visible from a light preference', async ({ page }) => {
 });
 
 test('toggle icon stays visible from a dark preference', async ({ page }) => {
-  for (const path of ['/blog/', '/']) {
+  for (const path of ['/blog/', '/projects/', '/']) {
     await fresh(page, path, 'dark');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
     await expectVisibleIcon(page);
