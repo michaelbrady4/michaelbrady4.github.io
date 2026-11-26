@@ -33,9 +33,24 @@ function tag(item, name) {
   return decodeHtml(match[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')).trim();
 }
 
+function timeOrZero(value) {
+  const time = Date.parse(value);
+  return Number.isFinite(time) ? time : 0;
+}
+
+/** Newest watched date first. A missing watched date uses the RSS pubDate. */
+export function sortFilms(films) {
+  return [...films].sort((a, b) => {
+    const aKey = a.watchedDate ? timeOrZero(`${a.watchedDate}T00:00:00Z`) : (a.publishedAt ?? 0);
+    const bKey = b.watchedDate ? timeOrZero(`${b.watchedDate}T00:00:00Z`) : (b.publishedAt ?? 0);
+    if (bKey !== aKey) return bKey - aKey;
+    return (b.publishedAt ?? 0) - (a.publishedAt ?? 0);
+  });
+}
+
 export function parseLetterboxdRss(xml) {
   const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((match) => match[1]);
-  return items
+  const films = items
     .map((item) => {
       const title = tag(item, 'letterboxd:filmTitle');
       const url = tag(item, 'link');
@@ -56,6 +71,7 @@ export function parseLetterboxdRss(xml) {
         review,
         url,
         watchedDate: /^\d{4}-\d{2}-\d{2}$/.test(watched) ? watched : null,
+        publishedAt: timeOrZero(tag(item, 'pubDate')),
       };
       if (film.year == null) delete film.year;
       if (!film.poster) delete film.poster;
@@ -65,6 +81,7 @@ export function parseLetterboxdRss(xml) {
       return film;
     })
     .filter(Boolean);
+  return sortFilms(films).map(({ publishedAt, ...film }) => film);
 }
 
 export async function fetchLetterboxd() {

@@ -18,7 +18,6 @@
     "astro": "^7.4.2"
   },
   "devDependencies": {
-    "@playwright/test": "^1.64.1",
-    "libsodium-wrappers": "^0.8.4"
+    "@playwright/test": "^1.64.1"
   }
 }

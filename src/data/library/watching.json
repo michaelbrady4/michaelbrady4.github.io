@@ -3,16 +3,6 @@
   "profileUrl": "https://letterboxd.com/michaelb4/",
   "films": [
     {
-      "id": "letterboxd-review-1599211291",
-      "title": "Primetime",
-      "year": 2026,
-      "poster": "https://a.ltrbxd.com/resized/film-poster/1/2/6/2/0/1/9/1262019-primetime-2026-0-600-0-900-crop.jpg?v=41640d6988",
-      "rating": 1.5,
-      "review": "Didn’t enjoy it and really didn’t like the ending",
-      "url": "https://letterboxd.com/michaelb4/film/primetime-2026/",
-      "watchedDate": "2026-10-22"
-    },
-    {
       "id": "letterboxd-review-1599210214",
       "title": "You Can See Everything",
       "year": 2026,
@@ -21,6 +11,16 @@
       "review": "Best documentary I’ve seen",
       "url": "https://letterboxd.com/michaelb4/film/you-can-see-everything/",
       "watchedDate": "2026-11-22"
+    },
+    {
+      "id": "letterboxd-review-1599211291",
+      "title": "Primetime",
+      "year": 2026,
+      "poster": "https://a.ltrbxd.com/resized/film-poster/1/2/6/2/0/1/9/1262019-primetime-2026-0-600-0-900-crop.jpg?v=41640d6988",
+      "rating": 1.5,
+      "review": "Didn’t enjoy it and really didn’t like the ending",
+      "url": "https://letterboxd.com/michaelb4/film/primetime-2026/",
+      "watchedDate": "2026-10-22"
     },
     {
       "id": "letterboxd-watch-1286630551",
@@ -72,5 +72,5 @@
       "watchedDate": "2024-11-09"
     }
   ],
-  "fetchedAt": "2026-11-26T16:02:02.011Z"
+  "fetchedAt": "2026-11-26T16:52:13.776Z"
 }
