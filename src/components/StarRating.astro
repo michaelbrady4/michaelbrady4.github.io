@@ -1,0 +1,14 @@
+---
+interface Props {
+  value: number;
+  max?: number;
+}
+
+const { value, max = 5 } = Astro.props;
+const label = `Rated ${value} out of ${max}`;
+const fills = Array.from({ length: max }, (_, index) => Math.max(0, Math.min(1, value - index)));
+---
+
+<p class="star-rating" role="img" aria-label={label}>
+  {fills.map((fill) => <span class="star" style={`--fill: ${fill}`}></span>)}
+</p>
