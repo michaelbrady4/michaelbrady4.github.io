@@ -1,16 +1,17 @@
 # Library setup
 
-The library page has three shelves.
+The library page has four shelves.
 
-- **Saved** is a list of links from your X bookmarks, grouped by folder.
+- **From X** is a list of links from your X bookmarks, grouped by folder.
 - **Reading** is your Goodreads shelf.
 - **Watching** is your recent Letterboxd diary.
+- **YouTube** is a public playlist.
 
-Reading and watching update on their own. Saved stays empty until you connect X and choose at least one bookmark folder. Nothing on the page is made up.
+Reading and watching update on their own. From X stays empty until you connect X and choose at least one bookmark folder. YouTube stays empty until you add a playlist id. Nothing on the page is made up.
 
 A GitHub Action named **Update library** runs every night at 7:15 UTC. You can also run it by hand from the Actions tab.
 
-## Saved links need four secrets
+## From X needs four secrets
 
 GitHub secrets are passwords the Action can read. They are not stored in the code.
 
@@ -23,7 +24,7 @@ Add them in the repo at **Settings → Secrets and variables → Actions → New
 | `X_REFRESH_TOKEN` | The login that lets the Action read your bookmarks. X replaces this every run. |
 | `LIBRARY_SECRETS_PAT` | A GitHub token whose only job is to save the new refresh token |
 
-The Action skips bookmarks, and the job still succeeds, when any of these are missing. The Saved tab then keeps showing its empty state.
+The Action skips bookmarks, and the job still succeeds, when any of these are missing. The From X tab then keeps showing its empty state.
 
 ## 1. Create an X app
 
@@ -100,7 +101,7 @@ Commit that change. The next nightly run (or a manual run) publishes only those 
 
 ## 5. Let the Action commit to main
 
-The Action pushes `reading.json`, `watching.json`, and `bookmarks.json` when they change. It does not open a pull request.
+The Action pushes `reading.json`, `watching.json`, `bookmarks.json`, and `youtube.json` when they change. It does not open a pull request. It leaves `youtube.json` alone when the playlist id is blank.
 
 If main is protected, allow GitHub Actions to update it, or the shelves will not refresh. In the repo, that setting is under **Settings → Rules → Rulesets** (or branch protection): permit the `github-actions` bot, or the Actions token, to bypass the rule.
 
@@ -141,3 +142,34 @@ On 26 Nov 2026 both URLs returned Goodreads' "Page not found" page. Goodreads [r
 Review pages themselves now ask for a sign-in, so a written review on the site is the public snippet Goodreads still includes in the widget, linked to the full review.
 
 **Letterboxd.** `https://boxd.it/5EEPT` redirects to `https://letterboxd.com/michaelb4/`. The job reads `https://letterboxd.com/michaelb4/rss/`. That feed is the recent diary, not every film you have ever logged. A line that only says "Watched on [date]" is Letterboxd's placeholder, so it is not shown as a review.
+
+## YouTube
+
+This shelf does not use a secret. It reads the free public playlist feed:
+
+`https://www.youtube.com/feeds/videos.xml?playlist_id=PLAYLIST_ID`
+
+The id is stored in `src/data/library/youtube.json`. It is blank for now, so the Action skips YouTube and the tab stays empty.
+
+When you want videos on the site:
+
+1. On YouTube, create a playlist and set its visibility to Public.
+2. Open the playlist. The address looks like `https://www.youtube.com/playlist?list=PLxxxxxxxxxxxx`.
+3. Copy the part after `list=`. You can also copy the whole playlist URL.
+4. Put that value in `playlistId` inside `src/data/library/youtube.json`:
+
+```json
+{
+  "playlistId": "PLxxxxxxxxxxxx",
+  "playlistUrl": "",
+  "videos": []
+}
+```
+
+5. Commit that file to main, or run **Update library** from the Actions tab.
+
+The next run fills in the videos. Each row shows the thumbnail, title, channel, and the date the video was added to the feed, and the title links to the video.
+
+YouTube's playlist feed returns the latest 15 videos. A longer playlist will not show older entries through this feed.
+
+If `playlistId` is blank or missing, the job logs a skip and does not call YouTube. A bad id fails the job, so the previous file is left as it was.

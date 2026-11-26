@@ -3,17 +3,29 @@ import StarRating from '../../components/StarRating.astro';
 import bookmarks from '../../data/library/bookmarks.json';
 import reading from '../../data/library/reading.json';
 import watching from '../../data/library/watching.json';
+import youtube from '../../data/library/youtube.json';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { formatDate } from '../../lib/dates';
 
-const savedCount = bookmarks.folders.reduce((sum, folder) => sum + folder.items.length, 0);
+interface YoutubeVideo {
+  id: string;
+  title: string;
+  url: string;
+  channel?: string;
+  thumbnail?: string;
+  addedAt?: string;
+}
+
+const videos = youtube.videos as YoutubeVideo[];
+const xCount = bookmarks.folders.reduce((sum, folder) => sum + folder.items.length, 0);
 const readingCount = reading.currentlyReading.length + reading.read.length;
 const watchingCount = watching.films.length;
 
 const tabs = [
-  { id: 'saved', label: 'Saved', count: savedCount },
-  { id: 'reading', label: 'Reading', count: readingCount },
-  { id: 'watching', label: 'Watching', count: watchingCount },
+  { id: 'x', label: 'From X', count: xCount, mark: 'x' },
+  { id: 'reading', label: 'Reading', count: readingCount, mark: '' },
+  { id: 'watching', label: 'Watching', count: watchingCount, mark: '' },
+  { id: 'youtube', label: 'YouTube', count: videos.length, mark: '' },
 ];
 
 function updated(value: string | undefined) {
@@ -23,23 +35,29 @@ function updated(value: string | undefined) {
 function watched(value: string) {
   return formatDate(new Date(`${value}T00:00:00Z`));
 }
+
+function added(value: string) {
+  const date = value.length === 10 ? `${value}T00:00:00Z` : value;
+  return formatDate(new Date(date));
+}
 ---
 
-<BaseLayout title="Library" description="Saved links, books, and films from Michael Brady.">
-  <div class="page library" id="library" data-tab="saved">
+<BaseLayout title="Library" description="Links from X, books, films, and videos from Michael Brady.">
+  <div class="page library" id="library" data-tab="x">
     <script is:inline>
       (function () {
         var root = document.getElementById('library');
         if (!root) return;
         var hash = (location.hash || '').replace('#', '');
-        var tab = hash === 'reading' || hash === 'watching' || hash === 'saved' ? hash : 'saved';
+        if (hash === 'saved') hash = 'x';
+        var known = hash === 'reading' || hash === 'watching' || hash === 'youtube' || hash === 'x';
         root.classList.add('is-tabbed');
-        root.setAttribute('data-tab', tab);
+        root.setAttribute('data-tab', known ? hash : 'x');
       })();
     </script>
     <header class="page-heading reveal">
       <h1 class="page-title">Library</h1>
-      <p class="library-lede">Links, books, and films I want to remember.</p>
+      <p class="library-lede">Links, books, films, and videos I want to remember.</p>
     </header>
     <div class="library-tabs" role="tablist" aria-label="Library sections">
       {
@@ -51,10 +69,25 @@ function watched(value: string) {
             id={`tab-${tab.id}`}
             data-tab-target={tab.id}
             aria-controls={`panel-${tab.id}`}
-            aria-selected={tab.id === 'saved' ? 'true' : 'false'}
-            tabindex={tab.id === 'saved' ? 0 : -1}
+            aria-selected={tab.id === 'x' ? 'true' : 'false'}
+            tabindex={tab.id === 'x' ? 0 : -1}
           >
-            <span>{tab.label}</span>
+            <span class="library-tab-label">
+              {
+                tab.mark === 'x' && (
+                  <svg class="library-x" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                    <path
+                      d="M3.2 3.2 12.8 12.8M12.8 3.2 3.2 12.8"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                )
+              }
+              {tab.label}
+            </span>
             <span class="library-count">{tab.count}</span>
           </button>
         ))
@@ -70,7 +103,8 @@ function watched(value: string) {
         });
 
         function select(name, focus, updateHash) {
-          if (order.indexOf(name) === -1) name = 'saved';
+          if (name === 'saved') name = 'x';
+          if (order.indexOf(name) === -1) name = 'x';
           root.setAttribute('data-tab', name);
           tabs.forEach(function (tab) {
             var on = tab.getAttribute('data-tab-target') === name;
@@ -103,18 +137,26 @@ function watched(value: string) {
           select(location.hash.replace('#', ''), false, false);
         });
 
-        select(root.getAttribute('data-tab') || 'saved', false, false);
+        select(root.getAttribute('data-tab') || 'x', false, false);
       })();
     </script>
 
-    <section class="library-panel" id="panel-saved" data-panel="saved" role="tabpanel" aria-labelledby="tab-saved">
-      <h2 class="library-panel-title">Saved</h2>
+    <section class="library-panel" id="panel-x" data-panel="x" role="tabpanel" aria-labelledby="tab-x">
+      <h2 class="library-panel-title">From X</h2>
       {
         bookmarks.folders.length === 0 ? (
           <div class="library-empty">
-            <img class="library-empty-mark" src="/favicon.svg" alt="" width="28" height="28" />
-            <h2>Nothing saved yet.</h2>
-            <p>Links from X will show up here, grouped by topic.</p>
+            <svg class="library-empty-x" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path
+                d="M3.2 3.2 12.8 12.8M12.8 3.2 3.2 12.8"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+            <h2>Nothing from X yet.</h2>
+            <p>Bookmark folders will show up here, grouped by topic.</p>
           </div>
         ) : (
           bookmarks.folders.map((folder) => (
@@ -285,6 +327,56 @@ function watched(value: string) {
                           {film.review}
                         </a>
                       )}
+                    </div>
+                  </article>
+                </li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+    </section>
+
+    <section class="library-panel" id="panel-youtube" data-panel="youtube" role="tabpanel" aria-labelledby="tab-youtube">
+      <h2 class="library-panel-title">YouTube</h2>
+      {
+        videos.length === 0 ? (
+          <div class="library-empty">
+            <h2>No videos yet.</h2>
+            <p>A YouTube playlist will show up here.</p>
+          </div>
+        ) : (
+          <>
+            <div class="library-section-head">
+              {
+                youtube.playlistUrl && (
+                  <a href={youtube.playlistUrl} target="_blank" rel="noopener noreferrer">
+                    YouTube playlist
+                  </a>
+                )
+              }
+              {youtube.fetchedAt && <time datetime={youtube.fetchedAt}>Updated {updated(youtube.fetchedAt)}</time>}
+            </div>
+            <h2 class="library-kicker">Playlist</h2>
+            <ul class="library-list">
+              {videos.map((video) => (
+                <li data-reveal>
+                  <article class="library-row is-video">
+                    <a class="library-media" href={video.url} tabindex="-1" aria-hidden="true" target="_blank" rel="noopener noreferrer">
+                      {video.thumbnail ? (
+                        <img src={video.thumbnail} alt="" width="160" height="90" />
+                      ) : (
+                        <span class="library-media-fallback"></span>
+                      )}
+                    </a>
+                    <div>
+                      <h3>
+                        <a href={video.url} target="_blank" rel="noopener noreferrer">
+                          {video.title}
+                        </a>
+                      </h3>
+                      {video.channel && <p class="library-by">{video.channel}</p>}
+                      {video.addedAt && <p class="library-by">Added {added(video.addedAt)}</p>}
                     </div>
                   </article>
                 </li>

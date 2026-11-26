@@ -8,19 +8,22 @@ function readJson(name) {
 const bookmarks = readJson('bookmarks.json');
 const reading = readJson('reading.json');
 const watching = readJson('watching.json');
+const youtube = readJson('youtube.json');
 
-test('library is in the nav and the three shelves are tabs', async ({ page }) => {
+test('library is in the nav and the four shelves are tabs', async ({ page }) => {
   await page.goto('/library/');
   await expect(page.getByRole('heading', { level: 1, name: 'Library' })).toBeVisible();
-  await expect(page.getByText('Links, books, and films I want to remember.')).toBeVisible();
+  await expect(page.getByText('Links, books, films, and videos I want to remember.')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Library', exact: true })).toHaveAttribute('aria-current', 'page');
 
   const tabs = page.getByRole('tab');
-  await expect(tabs).toHaveCount(3);
-  await expect(tabs.nth(0)).toHaveText(/Saved/);
+  await expect(tabs).toHaveCount(4);
+  await expect(tabs.nth(0)).toHaveText(/From X/);
   await expect(tabs.nth(1)).toHaveText(/Reading/);
   await expect(tabs.nth(2)).toHaveText(/Watching/);
+  await expect(tabs.nth(3)).toHaveText(/YouTube/);
   await expect(tabs.nth(0)).toHaveAttribute('aria-selected', 'true');
+  await expect(tabs.nth(0).locator('.library-x')).toBeVisible();
 
   const chrome = await page
     .locator('h1, .library-lede, .library-tabs, .library-kicker, .library-empty')
@@ -28,11 +31,11 @@ test('library is in the nav and the three shelves are tabs', async ({ page }) =>
   expect(chrome).not.toContain('\u2014');
 });
 
-test('saved shelf follows the bookmark file', async ({ page }) => {
+test('from x shelf follows the bookmark file', async ({ page }) => {
   await page.goto('/library/');
   if (bookmarks.folders.length === 0) {
-    await expect(page.getByRole('heading', { name: 'Nothing saved yet.' })).toBeVisible();
-    await expect(page.getByText('Links from X will show up here, grouped by topic.')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Nothing from X yet.' })).toBeVisible();
+    await expect(page.getByText('Bookmark folders will show up here, grouped by topic.')).toBeVisible();
     return;
   }
 
@@ -51,7 +54,7 @@ test('saved shelf follows the bookmark file', async ({ page }) => {
 test('reading shelf shows the Goodreads data', async ({ page }) => {
   await page.goto('/library/#reading');
   await expect(page.getByRole('tab', { name: /^Reading/ })).toHaveAttribute('aria-selected', 'true');
-  await expect(page.getByRole('heading', { name: 'Nothing saved yet.' })).toBeHidden();
+  await expect(page.getByRole('heading', { name: 'Nothing from X yet.' })).toBeHidden();
   await expect(page.getByRole('link', { name: 'Goodreads profile' })).toHaveAttribute('href', reading.profileUrl);
 
   if (reading.currentlyReading.length) {
@@ -110,13 +113,43 @@ test('watching shelf shows the Letterboxd diary', async ({ page }) => {
   }
 });
 
+test('youtube shelf follows the playlist file', async ({ page }) => {
+  await page.goto('/library/#youtube');
+  await expect(page.getByRole('tab', { name: /^YouTube/ })).toHaveAttribute('aria-selected', 'true');
+
+  if (!youtube.videos?.length) {
+    await expect(page.getByRole('heading', { name: 'No videos yet.' })).toBeVisible();
+    await expect(page.getByText('A YouTube playlist will show up here.')).toBeVisible();
+    await expect(page.locator('#panel-youtube a[href*="youtube.com/watch"]')).toHaveCount(0);
+    return;
+  }
+
+  if (youtube.playlistUrl) {
+    await expect(page.getByRole('link', { name: 'YouTube playlist' })).toHaveAttribute('href', youtube.playlistUrl);
+  }
+  for (const video of youtube.videos) {
+    const card = page.locator('.library-row', {
+      has: page.getByRole('heading', { name: video.title, exact: true }),
+    });
+    await expect(card.getByRole('link', { name: video.title, exact: true })).toHaveAttribute('href', video.url);
+    if (video.channel) await expect(card.getByText(video.channel, { exact: true })).toBeVisible();
+    if (video.thumbnail) await expect(card.locator('img')).toHaveAttribute('src', video.thumbnail);
+    if (video.addedAt) await expect(card.getByText(/^Added /)).toBeVisible();
+  }
+});
+
 test('arrow keys move between shelves', async ({ page }) => {
   await page.goto('/library/');
-  await page.getByRole('tab', { name: /^Saved/ }).focus();
+  await page.getByRole('tab', { name: /^From X/ }).focus();
   await page.keyboard.press('ArrowRight');
   await expect(page.getByRole('tab', { name: /^Reading/ })).toBeFocused();
   await expect(page.getByRole('heading', { name: 'Currently reading' })).toBeVisible();
   await page.keyboard.press('ArrowRight');
   await expect(page.getByRole('tab', { name: /^Watching/ })).toBeFocused();
   await expect(page.getByRole('heading', { name: 'Recent films' })).toBeVisible();
+  await page.keyboard.press('ArrowRight');
+  await expect(page.getByRole('tab', { name: /^YouTube/ })).toBeFocused();
+  if (!youtube.videos?.length) {
+    await expect(page.getByRole('heading', { name: 'No videos yet.' })).toBeVisible();
+  }
 });
