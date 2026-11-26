@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { projects } from '../../projects';
+---
+
+<BaseLayout title="Projects" description="Selected projects by Michael Brady.">
+  <div class="page">
+    <header class="page-heading reveal">
+      <h1 class="page-title">Projects</h1>
+    </header>
+    <ul class="project-list">
+      {
+        projects.map((project) => (
+          <li data-reveal>
+            <ProjectCard project={project} />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</BaseLayout>

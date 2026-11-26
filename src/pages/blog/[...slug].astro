@@ -22,11 +22,22 @@ const { Content } = await render(post);
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description ?? post.data.title}>
-  <article class="post">
-    <a class="back-link" href="/blog/">← Blog</a>
+  <article class="post reveal">
+    <a class="back-link" href="/blog/">
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path
+          d="M13 8H3M7 4 3 8l4 4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+      Blog
+    </a>
     <header class="post-header">
-      <h1>{post.data.title}</h1>
       <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+      <h1>{post.data.title}</h1>
     </header>
     <div class="prose">
       <Content />

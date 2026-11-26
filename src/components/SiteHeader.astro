@@ -1,43 +1,65 @@
 ---
+import { site } from '../site';
+
 const pathname = Astro.url.pathname;
 const homeActive = pathname === '/';
+const projectsActive = pathname.startsWith('/projects');
 const blogActive = pathname.startsWith('/blog');
 ---
 
 <header class="site-header">
   <nav class="site-nav" aria-label="Primary">
-    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch color theme">
-      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-      </svg>
-      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
-        <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-          <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2"></path>
-          <path d="m5.1 5.1 1.6 1.6M17.3 17.3l1.6 1.6M18.9 5.1l-1.6 1.6M6.7 17.3l-1.6 1.6"></path>
-        </g>
-      </svg>
-    </button>
-    <ul>
-      <li>
-        <a href="/" class:list={{ active: homeActive }} aria-current={homeActive ? 'page' : undefined}>Home</a>
-      </li>
-      <li>
-        <a
-          href="/blog/"
-          class:list={{ active: blogActive }}
-          aria-current={pathname === '/blog/' ? 'page' : undefined}
-        >
-          Blog
-        </a>
-      </li>
-    </ul>
+    <a class="brand" href="/">
+      <img class="brand-mark" src="/favicon.svg" alt="" width="20" height="20" />
+      {site.name}
+    </a>
+    <div class="nav-end">
+      <ul>
+        <li>
+          <a class="nav-link" href="/" class:list={{ active: homeActive }} aria-current={homeActive ? 'page' : undefined}>
+            Home
+          </a>
+        </li>
+        <li>
+          <a
+            class="nav-link"
+            href="/projects/"
+            class:list={{ active: projectsActive }}
+            aria-current={projectsActive ? 'page' : undefined}
+          >
+            Projects
+          </a>
+        </li>
+        <li>
+          <a
+            class="nav-link"
+            href="/blog/"
+            class:list={{ active: blogActive }}
+            aria-current={pathname === '/blog/' ? 'page' : undefined}
+          >
+            Blog
+          </a>
+        </li>
+      </ul>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch color theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"></circle>
+          <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2"></path>
+            <path d="m5.1 5.1 1.6 1.6M17.3 17.3l1.6 1.6M18.9 5.1l-1.6 1.6M6.7 17.3l-1.6 1.6"></path>
+          </g>
+        </svg>
+      </button>
+    </div>
   </nav>
 </header>
 <script is:inline>
@@ -63,7 +85,7 @@ const blogActive = pathname.startsWith('/blog');
       root.setAttribute('data-theme', theme);
       root.style.colorScheme = theme;
       var meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.setAttribute('content', theme === 'dark' ? '#12141c' : '#ffffff');
+      if (meta) meta.setAttribute('content', theme === 'dark' ? '#0e0f12' : '#f3f1ec');
       button.setAttribute('aria-label', label(theme));
       if (persist) {
         try {
