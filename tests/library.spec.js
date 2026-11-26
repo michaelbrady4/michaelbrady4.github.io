@@ -119,8 +119,14 @@ test('youtube shelf follows the playlist file', async ({ page }) => {
 
   if (!youtube.videos?.length) {
     await expect(page.getByRole('heading', { name: 'No videos yet.' })).toBeVisible();
-    await expect(page.getByText('A YouTube playlist will show up here.')).toBeVisible();
+    if (youtube.playlistUrl) {
+      await expect(page.getByRole('link', { name: 'Open the playlist' })).toHaveAttribute('href', youtube.playlistUrl);
+      await expect(page.getByText('It does not have any videos yet.')).toBeVisible();
+    } else {
+      await expect(page.getByText('A YouTube playlist will show up here.')).toBeVisible();
+    }
     await expect(page.locator('#panel-youtube a[href*="youtube.com/watch"]')).toHaveCount(0);
+    expect(youtube.playlistUrl || '').not.toContain('si=');
     return;
   }
 

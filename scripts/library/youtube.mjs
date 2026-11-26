@@ -71,9 +71,13 @@ export async function fetchYouTubePlaylist(playlistId) {
   if (!response.ok || !/<feed[\s>]/i.test(xml)) {
     throw new Error(`YouTube playlist feed was not available (status ${response.status}).`);
   }
-  return {
+  const title = xml.match(/<title[^>]*>([\s\S]*?)<\/title>/);
+  const playlistTitle = title ? stripTags(title[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/, '$1')) : '';
+  const data = {
     playlistId: id,
     playlistUrl: `https://www.youtube.com/playlist?list=${encodeURIComponent(id)}`,
     videos: parseYouTubeFeed(xml),
   };
+  if (playlistTitle) data.playlistTitle = playlistTitle;
+  return data;
 }

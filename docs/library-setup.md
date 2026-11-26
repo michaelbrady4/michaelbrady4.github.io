@@ -7,7 +7,7 @@ The library page has four shelves.
 - **Watching** is your recent Letterboxd diary.
 - **YouTube** is a public playlist.
 
-Reading and watching update on their own. From X stays empty until you connect X and choose at least one bookmark folder. YouTube stays empty until you add a playlist id. Nothing on the page is made up.
+Reading and watching update on their own. From X stays empty until you connect X and choose at least one bookmark folder. YouTube uses playlist `PLD8-d1TMwYyA`. That feed is public and, as of 26 Nov 2026, has no videos, so the tab stays empty until you add some. Nothing on the page is made up.
 
 A GitHub Action named **Update library** runs every night at 7:15 UTC. You can also run it by hand from the Actions tab.
 
@@ -149,9 +149,11 @@ This shelf does not use a secret. It reads the free public playlist feed:
 
 `https://www.youtube.com/feeds/videos.xml?playlist_id=PLAYLIST_ID`
 
-The id is stored in `src/data/library/youtube.json`. It is blank for now, so the Action skips YouTube and the tab stays empty.
+The id is stored in `src/data/library/youtube.json`. It is `PLD8-d1TMwYyA`, taken from `https://www.youtube.com/playlist?list=PLD8-d1TMwYyA`. The `si` share token is not stored.
 
-When you want videos on the site:
+On 26 Nov 2026 the feed returned HTTP 200 with a public Atom document. The playlist title is Website, the author is Michael Brady, and there are no `<entry>` elements. The playlist page says "No videos in this playlist yet." The tab stays empty until a video is added. The nightly job will pick videos up after that.
+
+To point the shelf at a different playlist:
 
 1. On YouTube, create a playlist and set its visibility to Public.
 2. Open the playlist. The address looks like `https://www.youtube.com/playlist?list=PLxxxxxxxxxxxx`.

@@ -343,7 +343,15 @@ function added(value: string) {
         videos.length === 0 ? (
           <div class="library-empty">
             <h2>No videos yet.</h2>
-            <p>A YouTube playlist will show up here.</p>
+            {
+              youtube.playlistUrl ? (
+                <p>
+                  <a href={youtube.playlistUrl} target="_blank" rel="noopener noreferrer">Open the playlist</a>. It does not have any videos yet.
+                </p>
+              ) : (
+                <p>A YouTube playlist will show up here.</p>
+              )
+            }
           </div>
         ) : (
           <>
