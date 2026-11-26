@@ -5,25 +5,23 @@ function readJson(name) {
   return JSON.parse(readFileSync(new URL(`../src/data/library/${name}`, import.meta.url), 'utf8'));
 }
 
-const bookmarks = readJson('bookmarks.json');
 const reading = readJson('reading.json');
 const watching = readJson('watching.json');
 const youtube = readJson('youtube.json');
 
-test('library is in the nav and the four shelves are tabs', async ({ page }) => {
+test('library is in the nav and the three shelves are tabs', async ({ page }) => {
   await page.goto('/library/');
   await expect(page.getByRole('heading', { level: 1, name: 'Library' })).toBeVisible();
-  await expect(page.getByText('Links, books, films, and videos I want to remember.')).toBeVisible();
+  await expect(page.getByText('Books, films, and videos I want to remember.')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Library', exact: true })).toHaveAttribute('aria-current', 'page');
 
   const tabs = page.getByRole('tab');
-  await expect(tabs).toHaveCount(4);
-  await expect(tabs.nth(0)).toHaveText(/From X/);
-  await expect(tabs.nth(1)).toHaveText(/Reading/);
-  await expect(tabs.nth(2)).toHaveText(/Watching/);
-  await expect(tabs.nth(3)).toHaveText(/YouTube/);
+  await expect(tabs).toHaveCount(3);
+  await expect(tabs.nth(0)).toHaveText(/Reading/);
+  await expect(tabs.nth(1)).toHaveText(/Watching/);
+  await expect(tabs.nth(2)).toHaveText(/YouTube/);
   await expect(tabs.nth(0)).toHaveAttribute('aria-selected', 'true');
-  await expect(tabs.nth(0).locator('.library-x')).toBeVisible();
+  await expect(page.getByRole('tab', { name: /From X/ })).toHaveCount(0);
 
   const chrome = await page
     .locator('h1, .library-lede, .library-tabs, .library-kicker, .library-empty')
@@ -31,30 +29,9 @@ test('library is in the nav and the four shelves are tabs', async ({ page }) => 
   expect(chrome).not.toContain('\u2014');
 });
 
-test('from x shelf follows the bookmark file', async ({ page }) => {
-  await page.goto('/library/');
-  if (bookmarks.folders.length === 0) {
-    await expect(page.getByRole('heading', { name: 'Nothing from X yet.' })).toBeVisible();
-    await expect(page.getByText('Bookmark folders will show up here, grouped by topic.')).toBeVisible();
-    return;
-  }
-
-  for (const folder of bookmarks.folders) {
-    await expect(page.getByRole('heading', { name: folder.name, exact: true })).toBeVisible();
-    for (const item of folder.items) {
-      const link = page.getByRole('link', { name: item.title, exact: true });
-      await expect(link).toHaveAttribute('href', item.url);
-      await expect(link).toContainText(item.domain);
-      if (item.note) await expect(link).toContainText(item.note);
-      expect(item.url).not.toMatch(/[?&](utm_|ref=|token=)/);
-    }
-  }
-});
-
 test('reading shelf shows the Goodreads data', async ({ page }) => {
-  await page.goto('/library/#reading');
+  await page.goto('/library/');
   await expect(page.getByRole('tab', { name: /^Reading/ })).toHaveAttribute('aria-selected', 'true');
-  await expect(page.getByRole('heading', { name: 'Nothing from X yet.' })).toBeHidden();
   await expect(page.getByRole('link', { name: 'Goodreads profile' })).toHaveAttribute('href', reading.profileUrl);
 
   if (reading.currentlyReading.length) {
@@ -160,9 +137,7 @@ test('youtube shelf follows the playlist file', async ({ page }) => {
 
 test('arrow keys move between shelves', async ({ page }) => {
   await page.goto('/library/');
-  await page.getByRole('tab', { name: /^From X/ }).focus();
-  await page.keyboard.press('ArrowRight');
-  await expect(page.getByRole('tab', { name: /^Reading/ })).toBeFocused();
+  await page.getByRole('tab', { name: /^Reading/ }).focus();
   await expect(page.getByRole('heading', { name: 'Currently reading' })).toBeVisible();
   await page.keyboard.press('ArrowRight');
   await expect(page.getByRole('tab', { name: /^Watching/ })).toBeFocused();
