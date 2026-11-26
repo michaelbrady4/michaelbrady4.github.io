@@ -4,6 +4,7 @@ import { site } from '../site';
 const pathname = Astro.url.pathname;
 const homeActive = pathname === '/';
 const projectsActive = pathname.startsWith('/projects');
+const libraryActive = pathname.startsWith('/library');
 const blogActive = pathname.startsWith('/blog');
 ---
 
@@ -28,6 +29,16 @@ const blogActive = pathname.startsWith('/blog');
             aria-current={projectsActive ? 'page' : undefined}
           >
             Projects
+          </a>
+        </li>
+        <li>
+          <a
+            class="nav-link"
+            href="/library/"
+            class:list={{ active: libraryActive }}
+            aria-current={libraryActive ? 'page' : undefined}
+          >
+            Library
           </a>
         </li>
         <li>

@@ -1,0 +1,76 @@
+{
+  "username": "michaelb4",
+  "profileUrl": "https://letterboxd.com/michaelb4/",
+  "films": [
+    {
+      "id": "letterboxd-review-1599211291",
+      "title": "Primetime",
+      "year": 2026,
+      "poster": "https://a.ltrbxd.com/resized/film-poster/1/2/6/2/0/1/9/1262019-primetime-2026-0-600-0-900-crop.jpg?v=41640d6988",
+      "rating": 1.5,
+      "review": "Didn’t enjoy it and really didn’t like the ending",
+      "url": "https://letterboxd.com/michaelb4/film/primetime-2026/",
+      "watchedDate": "2026-10-22"
+    },
+    {
+      "id": "letterboxd-review-1599210214",
+      "title": "You Can See Everything",
+      "year": 2026,
+      "poster": "https://a.ltrbxd.com/resized/film-poster/1/6/2/9/4/4/3/1629443-you-can-see-everything-0-600-0-900-crop.jpg?v=84f6724d74",
+      "rating": 5,
+      "review": "Best documentary I’ve seen",
+      "url": "https://letterboxd.com/michaelb4/film/you-can-see-everything/",
+      "watchedDate": "2026-11-22"
+    },
+    {
+      "id": "letterboxd-watch-1286630551",
+      "title": "Jobs",
+      "year": 2013,
+      "poster": "https://a.ltrbxd.com/resized/film-poster/9/1/9/5/2/91952-jobs-0-600-0-900-crop.jpg?v=602b5e438d",
+      "rating": 3,
+      "url": "https://letterboxd.com/michaelb4/film/jobs/",
+      "watchedDate": "2026-04-19"
+    },
+    {
+      "id": "letterboxd-review-1252678996",
+      "title": "BlackBerry",
+      "year": 2023,
+      "poster": "https://a.ltrbxd.com/resized/film-poster/9/1/5/2/3/0/915230-blackberry-0-600-0-900-crop.jpg?v=06a0669b8f",
+      "rating": 3.5,
+      "review": "Everything I look for in a biopic",
+      "url": "https://letterboxd.com/michaelb4/film/blackberry-2023/",
+      "watchedDate": "2026-03-24"
+    },
+    {
+      "id": "letterboxd-review-1247209190",
+      "title": "Peaky Blinders: The Immortal Man",
+      "year": 2026,
+      "poster": "https://a.ltrbxd.com/resized/film-poster/7/8/7/8/4/9/787849-peaky-blinders-the-immortal-man-0-600-0-900-crop.jpg?v=4236d354ae",
+      "rating": 3.5,
+      "review": "Felt like a great way to send off Tommy Shelby",
+      "url": "https://letterboxd.com/michaelb4/film/peaky-blinders-the-immortal-man/",
+      "watchedDate": "2026-03-21"
+    },
+    {
+      "id": "letterboxd-review-1246073023",
+      "title": "F1",
+      "year": 2025,
+      "poster": "https://a.ltrbxd.com/resized/film-poster/8/1/7/9/7/7/817977-f1-the-movie-0-600-0-900-crop.jpg?v=f5ae2b99b9",
+      "rating": 3,
+      "review": "Sonny was a standout character, and the performance behind him carried real weight Soundtrack was MVP of the movie though.",
+      "url": "https://letterboxd.com/michaelb4/film/f1/",
+      "watchedDate": "2026-03-20"
+    },
+    {
+      "id": "letterboxd-review-711594336",
+      "title": "The King's Man",
+      "year": 2021,
+      "poster": "https://a.ltrbxd.com/resized/film-poster/4/0/7/8/5/5/407855-the-king-s-man-0-600-0-900-crop.jpg?v=2e3a40da08",
+      "rating": 2.5,
+      "review": "Lost me in the middle but tied it together at the end",
+      "url": "https://letterboxd.com/michaelb4/film/the-kings-man/",
+      "watchedDate": "2024-11-09"
+    }
+  ],
+  "fetchedAt": "2026-11-26T16:02:02.011Z"
+}

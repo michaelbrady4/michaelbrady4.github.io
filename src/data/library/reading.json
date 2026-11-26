@@ -1,0 +1,111 @@
+{
+  "profileUrl": "https://www.goodreads.com/user/show/143360526",
+  "source": "widget",
+  "currentlyReading": [
+    {
+      "id": "9127838710",
+      "title": "The Hunger Games",
+      "author": "Suzanne Collins",
+      "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1592234598l/49494289._SY475_.jpg",
+      "reviewUrl": "https://www.goodreads.com/review/show/9127838710"
+    }
+  ],
+  "read": [
+    {
+      "id": "8939842183",
+      "title": "Young Money: A Field Guide to Wealth and Purpose in Your Twenties",
+      "author": "Jack Raines",
+      "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1762324985l/243596137._SY475_.jpg",
+      "rating": 5,
+      "review": "I’ve been reading Jack’s writing since his early Backpackin’ travel blog days, so I went into Young Money with high expectations. I loved it. The book is funny, honest, insightful, and every bit as good as the blog that made me a ...",
+      "reviewUrl": "https://www.goodreads.com/review/show/8939842183"
+    },
+    {
+      "id": "7716689959",
+      "title": "The Ultimate Hitchhiker's Guide to the Galaxy",
+      "author": "Douglas Adams",
+      "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1514576564l/37768423._SY475_.jpg",
+      "reviewUrl": "https://www.goodreads.com/review/show/7716689959"
+    },
+    {
+      "id": "8233719680",
+      "title": "Project Hail Mary",
+      "author": "Andy Weir",
+      "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1734434586l/222697645._SY475_.jpg",
+      "reviewUrl": "https://www.goodreads.com/review/show/8233719680"
+    },
+    {
+      "id": "7083166898",
+      "title": "Greenlights",
+      "author": "Matthew McConaughey",
+      "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1604281659l/52838315._SY475_.jpg",
+      "rating": 5,
+      "reviewUrl": "https://www.goodreads.com/review/show/7083166898"
+    },
+    {
+      "id": "7083275192",
+      "title": "The Martian",
+      "author": "Andy Weir",
+      "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1730462983l/18401393._SY475_.jpg",
+      "rating": 5,
+      "reviewUrl": "https://www.goodreads.com/review/show/7083275192"
+    },
+    {
+      "id": "4454364686",
+      "title": "How to Win Friends & Influence People",
+      "author": "Dale Carnegie",
+      "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1442726934l/4865._SY475_.jpg",
+      "rating": 1,
+      "reviewUrl": "https://www.goodreads.com/review/show/4454364686"
+    },
+    {
+      "id": "4357145813",
+      "title": "Dune Messiah",
+      "author": "Frank Herbert",
+      "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1577043824l/44492285._SY475_.jpg",
+      "rating": 2,
+      "reviewUrl": "https://www.goodreads.com/review/show/4357145813"
+    },
+    {
+      "id": "4471905114",
+      "title": "A Game of Thrones",
+      "author": "George R.R. Martin",
+      "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1562726234l/13496._SY475_.jpg",
+      "rating": 5,
+      "reviewUrl": "https://www.goodreads.com/review/show/4471905114"
+    },
+    {
+      "id": "4454371234",
+      "title": "The Hitchhiker’s Guide to the Galaxy",
+      "author": "Douglas Adams",
+      "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1559986152l/386162._SY475_.jpg",
+      "rating": 5,
+      "reviewUrl": "https://www.goodreads.com/review/show/4454371234"
+    },
+    {
+      "id": "4357145696",
+      "title": "Dune",
+      "author": "Frank Herbert",
+      "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1555447414l/44767458._SY475_.jpg",
+      "rating": 5,
+      "reviewUrl": "https://www.goodreads.com/review/show/4357145696"
+    },
+    {
+      "id": "4471904741",
+      "title": "A Knight of the Seven Kingdoms",
+      "author": "George R.R. Martin",
+      "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1693445229l/18635622._SY475_.jpg",
+      "rating": 5,
+      "reviewUrl": "https://www.goodreads.com/review/show/4471904741"
+    },
+    {
+      "id": "4454368464",
+      "title": "Elon Musk: Tesla, SpaceX, and the Quest for a Fantastic Future",
+      "author": "Ashlee Vance",
+      "cover": "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1518291452l/25541028._SY475_.jpg",
+      "rating": 3,
+      "reviewUrl": "https://www.goodreads.com/review/show/4454368464"
+    }
+  ],
+  "fetchedAt": "2026-11-26T16:02:02.009Z"
+}
