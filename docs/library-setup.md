@@ -1,5 +1,7 @@
 # Library setup
 
+Product requirements, architecture, and past choices are in [PRD.md](PRD.md), [ARCHITECTURE.md](ARCHITECTURE.md), and [DECISIONS.md](DECISIONS.md). This file is only how the nightly library job is fed.
+
 The library page has three shelves.
 
 - **Reading** is your Goodreads shelf.
