@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { largerCover, parseGoodreadsRss, parseGoodreadsWidget } from './goodreads.mjs';
-import { parseLetterboxdRss } from './letterboxd.mjs';
+import { parseLetterboxdRss, sortFilms } from './letterboxd.mjs';
 
 const widget = String.raw`  var widget_code = '  <div class=\"gr_custom_each_container_read\">\n          <div class=\"gr_custom_book_container_read\">\n            <a title=\"Example\" href=\"https://www.goodreads.com/review/show/123?utm_source=custom_widget\"><img alt=\"Example\" src=\"https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1l/1._SX98_.jpg\" /><\/a>\n          <\/div>\n          <div class=\"gr_custom_rating_read\">\n            <span><img src=\"https://s.gr-assets.com/images/layout/gr_flat_red_star_active.png\" /><img src=\"https://s.gr-assets.com/images/layout/gr_flat_red_star_active.png\" /><img src=\"https://s.gr-assets.com/images/layout/gr_flat_red_star_inactive.png\" /><\/span>\n          <\/div>\n          <div class=\"gr_custom_title_read\">\n            <a href=\"https://www.goodreads.com/review/show/123?utm_source=custom_widget&amp;utm_medium=api\">Example Book<\/a>\n          <\/div>\n          <div class=\"gr_custom_author_read\">\n            by <a href=\"https://www.goodreads.com/author/show/1.Ada\">Ada Lovelace<\/a>\n          <\/div>\n          <div class=\"gr_custom_review_read\">\n            ★★ A short note.\n          <\/div>\n      <\/div>\n'
   var widget_div = document.getElementById('gr_custom_widget_read')
@@ -65,4 +65,44 @@ test('parses Letterboxd items and skips the automatic watched line', () => {
   assert.equal(films[0].poster, 'https://a.ltrbxd.com/resized/poster.jpg');
   assert.equal(films[0].watchedDate, '2026-10-22');
   assert.equal(films[1].review, undefined);
+});
+
+test('sorts films by watched date, newest first, and uses pubDate when watched date is missing', () => {
+  const xml = `<?xml version="1.0"?><rss><channel>
+    <item>
+      <link>https://letterboxd.com/michaelb4/film/older/</link>
+      <letterboxd:filmTitle>Older</letterboxd:filmTitle>
+      <letterboxd:watchedDate>2026-01-02</letterboxd:watchedDate>
+      <pubDate>Sat, 03 Jan 2026 12:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <link>https://letterboxd.com/michaelb4/film/newest/</link>
+      <letterboxd:filmTitle>Newest</letterboxd:filmTitle>
+      <letterboxd:watchedDate>2026-11-22</letterboxd:watchedDate>
+      <pubDate>Mon, 01 Jan 2026 12:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <link>https://letterboxd.com/michaelb4/film/logged-only/</link>
+      <letterboxd:filmTitle>Logged only</letterboxd:filmTitle>
+      <pubDate>Wed, 15 Jul 2026 12:00:00 +0000</pubDate>
+    </item>
+  </channel></rss>`;
+  const films = parseLetterboxdRss(xml);
+  assert.deepEqual(
+    films.map((film) => film.title),
+    ['Newest', 'Logged only', 'Older'],
+  );
+  assert.equal(films[0].watchedDate, '2026-11-22');
+  assert.equal(films[1].watchedDate, undefined);
+  assert.equal(films[2].watchedDate, '2026-01-02');
+  assert.equal('publishedAt' in films[0], false);
+
+  const tied = sortFilms([
+    { title: 'Morning', watchedDate: '2026-05-01', publishedAt: Date.parse('2026-05-01T08:00:00Z') },
+    { title: 'Evening', watchedDate: '2026-05-01', publishedAt: Date.parse('2026-05-01T20:00:00Z') },
+  ]);
+  assert.deepEqual(
+    tied.map((film) => film.title),
+    ['Evening', 'Morning'],
+  );
 });

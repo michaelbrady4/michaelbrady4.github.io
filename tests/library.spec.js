@@ -95,12 +95,26 @@ test('watching shelf shows the Letterboxd diary', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Letterboxd profile' })).toHaveAttribute('href', watching.profileUrl);
   await expect(page.getByRole('heading', { name: 'Recent films' })).toBeVisible();
 
+  const titles = (await page.locator('#panel-watching h3').allTextContents()).map((title) => title.trim());
+  expect(titles).toEqual(watching.films.map((film) => film.title));
+  const watched = watching.films.map((film) => film.watchedDate).filter(Boolean);
+  expect(watched).toEqual([...watched].sort((a, b) => b.localeCompare(a)));
+
   for (const film of watching.films) {
     const card = page.locator('.library-row', {
       has: page.getByRole('heading', { name: film.title, exact: true }),
     });
     await expect(card.getByRole('link', { name: film.title, exact: true })).toHaveAttribute('href', film.url);
     if (film.year) await expect(card.getByText(String(film.year), { exact: true })).toBeVisible();
+    if (film.watchedDate) {
+      const label = new Intl.DateTimeFormat('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        timeZone: 'UTC',
+      }).format(new Date(`${film.watchedDate}T00:00:00Z`));
+      await expect(card.getByText(label, { exact: true })).toBeVisible();
+    }
     if (film.poster) await expect(card.locator('img')).toHaveAttribute('src', film.poster);
     if (film.rating) {
       await expect(card.getByRole('img', { name: `Rated ${film.rating} out of 5` })).toBeVisible();
