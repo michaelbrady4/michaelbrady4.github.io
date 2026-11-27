@@ -9,7 +9,7 @@ export const site = {
   email: 'mb.bradymike@gmail.com',
   bio: [
     'I’m a product manager at C3 AI, where I work on agentic AI products. My background is in data science and software engineering, so I like getting into the technical details.',
-    'I’m always trying new software, and I pay attention to why some of it just clicks. It’s rarely the feature list. It’s usually a handful of small decisions that make something feel right to use.',
+    'I’m always trying new software, and I pay attention to why some of it just clicks. Most of the time it comes down to a few small decisions that make it feel right to use.',
     'I have a master’s in Computer Science from CU Boulder, and bachelor’s degrees in Computer Science and Business Administration from Hood College.',
   ],
   links: {
