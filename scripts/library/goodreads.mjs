@@ -1,8 +1,11 @@
-import { cleanReview, decodeHtml, stripTags } from './text.mjs';
+import { cleanReview, decodeHtml, safeUrl, stripTags } from './text.mjs';
 import { sanitizeUrl } from './sanitize-url.mjs';
 
 export const GOODREADS_USER_ID = '143360526';
 export const GOODREADS_PROFILE = `https://www.goodreads.com/user/show/${GOODREADS_USER_ID}`;
+
+const LINK_HOSTS = ['goodreads.com'];
+const COVER_HOSTS = ['gr-assets.com', 'goodreads.com', 'media-amazon.com', 'ssl-images-amazon.com'];
 
 const UA =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
@@ -42,14 +45,14 @@ function reviewId(url) {
 }
 
 function bookFromParts({ title, author, cover, rating, review, reviewUrl }) {
-  const href = reviewUrl ? sanitizeUrl(reviewUrl) : '';
+  const href = reviewUrl ? safeUrl(sanitizeUrl(reviewUrl), LINK_HOSTS) : null;
   const id = reviewId(href);
   if (!title || !href || !id) return null;
   const book = {
     id,
     title,
     author: author || '',
-    cover: largerCover(cover),
+    cover: cover ? safeUrl(largerCover(cover), COVER_HOSTS) : null,
     rating: rating > 0 ? rating : null,
     review: review || null,
     reviewUrl: href,

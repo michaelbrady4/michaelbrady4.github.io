@@ -1,0 +1,108 @@
+---
+/**
+ * Homepage "Lately" strip. Reads the same committed JSON as /library/, so it never shows
+ * anything the feeds did not return. Each item is left out when its shelf is empty.
+ */
+import reading from '../data/library/reading.json';
+import watching from '../data/library/watching.json';
+import youtube from '../data/library/youtube.json';
+import StarRating from './StarRating.astro';
+import { formatDate } from '../lib/dates';
+
+type Item = {
+  label: string;
+  title: string;
+  meta?: string;
+  rating?: number;
+  href: string;
+  icon: 'book' | 'film' | 'video';
+};
+
+const book = reading.currentlyReading[0] ?? reading.read[0];
+const film = watching.films[0] as (typeof watching.films)[number] | undefined;
+const video = (youtube.videos as { title: string; channel?: string }[])[0];
+
+const items: Item[] = [];
+
+if (book) {
+  items.push({
+    label: reading.currentlyReading.length ? 'Reading' : 'Last read',
+    title: book.title,
+    meta: book.author || undefined,
+    href: '/library/#reading',
+    icon: 'book',
+  });
+}
+
+if (film) {
+  items.push({
+    label: 'Last watched',
+    title: film.title,
+    meta: film.watchedDate ? formatDate(new Date(`${film.watchedDate}T00:00:00Z`)) : undefined,
+    rating: film.rating,
+    href: '/library/#watching',
+    icon: 'film',
+  });
+}
+
+if (video) {
+  items.push({
+    label: 'Saved video',
+    title: video.title,
+    meta: video.channel,
+    href: '/library/#youtube',
+    icon: 'video',
+  });
+}
+---
+
+{
+  items.length > 0 && (
+    <section class="lately" aria-labelledby="lately-title">
+      <h2 id="lately-title" class="lately-title reveal">Lately</h2>
+      <ul class="lately-list">
+        {items.map((item) => (
+          <li data-reveal>
+            <a class="lately-item" href={item.href}>
+              <span class="lately-icon" aria-hidden="true">
+                {item.icon === 'book' && (
+                  <svg viewBox="0 0 16 16" focusable="false">
+                    <path
+                      d="M3 3.2c1.8-.6 3.6-.4 5 .8 1.4-1.2 3.2-1.4 5-.8v9.4c-1.8-.6-3.6-.4-5 .8-1.4-1.2-3.2-1.4-5-.8V3.2ZM8 4v9.4"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.3"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                )}
+                {item.icon === 'film' && (
+                  <svg viewBox="0 0 16 16" focusable="false">
+                    <rect x="2.5" y="3" width="11" height="10" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.3" />
+                    <path d="M5.5 3v10M10.5 3v10M2.5 6.3h3M2.5 9.7h3M10.5 6.3h3M10.5 9.7h3" fill="none" stroke="currentColor" stroke-width="1.3" />
+                  </svg>
+                )}
+                {item.icon === 'video' && (
+                  <svg viewBox="0 0 16 16" focusable="false">
+                    <rect x="2" y="3.5" width="12" height="9" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.3" />
+                    <path d="M7 6.2v3.6L10 8 7 6.2Z" fill="currentColor" />
+                  </svg>
+                )}
+              </span>
+              <span class="lately-body">
+                <span class="lately-label">{item.label}</span>
+                <span class="lately-name">{item.title}</span>
+                {(item.meta || item.rating) && (
+                  <span class="lately-meta">
+                    {item.rating ? <StarRating value={item.rating} as="span" /> : null}
+                    {item.meta && <span>{item.meta}</span>}
+                  </span>
+                )}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

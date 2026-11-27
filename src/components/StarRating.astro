@@ -2,13 +2,15 @@
 interface Props {
   value: number;
   max?: number;
+  /** Use "span" when the stars sit inside inline content, such as a link. */
+  as?: 'p' | 'span';
 }
 
-const { value, max = 5 } = Astro.props;
+const { value, max = 5, as: Tag = 'p' } = Astro.props;
 const label = `Rated ${value} out of ${max}`;
 const fills = Array.from({ length: max }, (_, index) => Math.max(0, Math.min(1, value - index)));
 ---
 
-<p class="star-rating" role="img" aria-label={label}>
+<Tag class="star-rating" role="img" aria-label={label}>
   {fills.map((fill) => <span class="star" style={`--fill: ${fill}`}></span>)}
-</p>
+</Tag>

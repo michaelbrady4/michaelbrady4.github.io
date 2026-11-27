@@ -1,4 +1,7 @@
-import { cleanReview, decodeHtml } from './text.mjs';
+import { cleanReview, decodeHtml, safeUrl } from './text.mjs';
+
+const LINK_HOSTS = ['letterboxd.com', 'boxd.it'];
+const POSTER_HOSTS = ['ltrbxd.com'];
 
 export const LETTERBOXD_SHORT_URL = 'https://boxd.it/5EEPT';
 
@@ -53,7 +56,7 @@ export function parseLetterboxdRss(xml) {
   const films = items
     .map((item) => {
       const title = tag(item, 'letterboxd:filmTitle');
-      const url = tag(item, 'link');
+      const url = safeUrl(tag(item, 'link'), LINK_HOSTS);
       if (!title || !url) return null;
       const year = Number(tag(item, 'letterboxd:filmYear'));
       const rating = Number(tag(item, 'letterboxd:memberRating'));
@@ -66,7 +69,7 @@ export function parseLetterboxdRss(xml) {
         id: guid,
         title,
         year: Number.isFinite(year) ? year : null,
-        poster: poster ? decodeHtml(poster) : null,
+        poster: poster ? safeUrl(decodeHtml(poster), POSTER_HOSTS) : null,
         rating: Number.isFinite(rating) && rating > 0 ? rating : null,
         review,
         url,

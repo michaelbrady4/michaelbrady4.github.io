@@ -149,7 +149,7 @@ function added(value: string) {
                         <article class="library-row is-current">
                           <a class="library-media" href={book.reviewUrl} tabindex="-1" aria-hidden="true" target="_blank" rel="noopener noreferrer">
                             {book.cover ? (
-                              <img src={book.cover} alt="" width="120" height="180" />
+                              <img src={book.cover} alt="" width="120" height="180" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
                             ) : (
                               <span class="library-media-fallback"></span>
                             )}
@@ -185,7 +185,7 @@ function added(value: string) {
                         <article class="library-row">
                           <a class="library-media" href={book.reviewUrl} tabindex="-1" aria-hidden="true" target="_blank" rel="noopener noreferrer">
                             {book.cover ? (
-                              <img src={book.cover} alt="" width="92" height="138" />
+                              <img src={book.cover} alt="" width="92" height="138" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
                             ) : (
                               <span class="library-media-fallback"></span>
                             )}
@@ -241,7 +241,7 @@ function added(value: string) {
                   <article class="library-row is-film">
                     <a class="library-media" href={film.url} tabindex="-1" aria-hidden="true" target="_blank" rel="noopener noreferrer">
                       {film.poster ? (
-                        <img src={film.poster} alt="" width="92" height="138" />
+                        <img src={film.poster} alt="" width="92" height="138" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
                       ) : (
                         <span class="library-media-fallback"></span>
                       )}
@@ -307,7 +307,7 @@ function added(value: string) {
                   <article class="library-row is-video">
                     <a class="library-media" href={video.url} tabindex="-1" aria-hidden="true" target="_blank" rel="noopener noreferrer">
                       {video.thumbnail ? (
-                        <img src={video.thumbnail} alt="" width="160" height="90" />
+                        <img src={video.thumbnail} alt="" width="160" height="90" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
                       ) : (
                         <span class="library-media-fallback"></span>
                       )}
@@ -329,5 +329,24 @@ function added(value: string) {
         )
       }
     </section>
+    <script is:inline>
+      (function () {
+        // Covers come from Goodreads, Letterboxd, and YouTube. If one fails, show the plain tile.
+        function fallback(img) {
+          var tile = document.createElement('span');
+          tile.className = 'library-media-fallback';
+          img.replaceWith(tile);
+        }
+        document.querySelectorAll('#library .library-media img').forEach(function (img) {
+          if (img.complete && img.naturalWidth === 0) {
+            fallback(img);
+            return;
+          }
+          img.addEventListener('error', function () {
+            fallback(img);
+          });
+        });
+      })();
+    </script>
   </div>
 </BaseLayout>

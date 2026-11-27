@@ -1,6 +1,13 @@
 # Nightly library sync for Goodreads, Letterboxd, and YouTube.
 # None of these need secrets. YouTube runs only when youtube.json has a playlist id.
 # See docs/library-setup.md.
+#
+# Two jobs so that npm packages never run with write access:
+# 1. fetch: read-only token. Installs dependencies, runs the parsers, uploads the JSON.
+# 2. publish: no npm install. Commits the JSON and starts the Pages deploy.
+#
+# The deploy has to be started here. A push made with GITHUB_TOKEN does not trigger
+# other workflows, so deploy.yml would never see the nightly commit on its own.
 
 name: Update library
 
@@ -10,18 +17,24 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: library-sync
   cancel-in-progress: false
 
 jobs:
-  update:
+  fetch:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      sync: ${{ steps.sync.outcome }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
@@ -35,18 +48,56 @@ jobs:
         id: sync
         run: node scripts/library/update.mjs
         continue-on-error: true
+      - name: Upload library data
+        uses: actions/upload-artifact@v7
+        with:
+          name: library-data
+          path: |
+            src/data/library/reading.json
+            src/data/library/watching.json
+            src/data/library/youtube.json
+          retention-days: 1
+          if-no-files-found: error
+
+  publish:
+    needs: fetch
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Download library data
+        uses: actions/download-artifact@v8
+        with:
+          name: library-data
+          path: ${{ runner.temp }}/library-data
       - name: Commit library data
-        if: steps.sync.outcome == 'success' || steps.sync.outcome == 'failure'
+        id: commit
         run: |
+          for name in reading watching youtube; do
+            src="$RUNNER_TEMP/library-data/$name.json"
+            # Only accept files that parse as JSON.
+            node -e 'JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"))' "$src"
+            cp "$src" "src/data/library/$name.json"
+          done
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/data/library/reading.json src/data/library/watching.json src/data/library/youtube.json
           if git diff --staged --quiet; then
             echo "No library changes."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "Update library data"
             git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
+      - name: Deploy the updated site
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref "${{ github.event.repository.default_branch }}"
       - name: Fail when the sync failed
-        if: steps.sync.outcome == 'failure'
+        if: needs.fetch.outputs.sync == 'failure'
         run: exit 1

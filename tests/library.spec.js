@@ -9,6 +9,19 @@ const reading = readJson('reading.json');
 const watching = readJson('watching.json');
 const youtube = readJson('youtube.json');
 
+// Covers come from Goodreads, Letterboxd, and YouTube. Serve a 1x1 PNG so the tests
+// never depend on those hosts, and the broken-cover fallback does not replace the img.
+const PIXEL = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+  'base64',
+);
+
+test.beforeEach(async ({ page }) => {
+  await page.route(/(gr-assets|ltrbxd|ytimg)\.com/, (route) =>
+    route.fulfill({ status: 200, contentType: 'image/png', body: PIXEL }),
+  );
+});
+
 test('library is in the nav and the three shelves are tabs', async ({ page }) => {
   await page.goto('/library/');
   await expect(page.getByRole('heading', { level: 1, name: 'Library' })).toBeVisible();

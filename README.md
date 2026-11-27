@@ -6,7 +6,7 @@ The site is a static [Astro](https://astro.build) project. GitHub Pages hosts it
 
 ## Pages
 
-- Home, with a short bio and a Selected projects preview
+- Home, with a short bio, a Lately strip (current book and latest film from the library), and a Selected projects preview
 - [Projects](https://michaelbrady4.github.io/projects/)
 - [Library](https://michaelbrady4.github.io/library/): Reading, Watching, and YouTube
 - [Blog](https://michaelbrady4.github.io/blog/): Markdown posts, empty until one is added
@@ -35,7 +35,9 @@ npm run test:unit
 
 Pushing to `main` runs `.github/workflows/deploy.yml`, which builds with `npm run build` and publishes `dist` through GitHub Pages. In the repo, Settings, Pages, Source must be GitHub Actions.
 
-A second workflow, Update library, runs nightly at 07:15 UTC and can be started by hand. It refreshes Goodreads, Letterboxd, and YouTube JSON, then commits only when the content changed.
+A second workflow, Update library, runs nightly at 07:15 UTC and can be started by hand. It refreshes Goodreads, Letterboxd, and YouTube JSON, commits only when the content changed, and then starts the deploy.
+
+Each page gets a social preview image at `/og/<page>.png`, built from `src/lib/og.ts`. The build also writes `sitemap-index.xml`.
 
 ## Docs
 

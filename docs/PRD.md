@@ -22,7 +22,7 @@ The homepage bio is the public introduction. It is four paragraphs in `src/site.
 
 - Type: self-hosted Geist in `public/fonts/geist-latin-wght-normal.woff2`, applied in `src/styles/global.css`.
 - Gradients: `--glow-cool` and `--glow-warm` on `body::before`.
-- Motion: `.reveal` rise, hover lift on cards, orb lift on the header mark. `prefers-reduced-motion: reduce` turns the motion off (`src/styles/global.css`, `src/layouts/BaseLayout.astro`).
+- Motion: `.reveal` rise, hover lift on cards, orb lift on the header mark, and a crossfade between pages using native view transitions. `prefers-reduced-motion: reduce` turns the motion off (`src/styles/global.css`, `src/layouts/BaseLayout.astro`).
 - Theme: `data-theme` of `light` or `dark`, stored in `localStorage` key `theme`. The control is the button in `src/components/SiteHeader.astro`.
 
 ### Clean, minimal, handmade
@@ -74,6 +74,22 @@ Current projects:
 
 **How it is fulfilled.** `src/pages/index.astro` section `.project-preview`, heading "Selected projects", link "All projects" to `/projects/`. The same `projects` array and `ProjectCard` (heading level 3).
 
+### Homepage Lately strip
+
+**Requirement.** The homepage shows what Michael is reading and watching right now, from the real library data, with a link into the library.
+
+**Status.** Shipped, 2026-11-27.
+
+**How it is fulfilled.** `src/components/Lately.astro`, placed between the bio and Selected projects in `src/pages/index.astro`. It shows the current book (or the latest read book), the latest film with its rating and watched date, and the latest YouTube video when the playlist has one. Each card links to its tab on `/library/`. A shelf with no rows is left out. Nothing is typed in by hand. Test: `tests/home-and-meta.spec.js`.
+
+### Social previews and search
+
+**Requirement.** A shared link on LinkedIn, X, or iMessage shows a branded preview image. Search engines get a sitemap, a robots file, and structured data about Michael.
+
+**Status.** Shipped, 2026-11-27.
+
+**How it is fulfilled.** Build-time 1200x630 PNGs at `/og/<page>.png`, drawn by `src/lib/og.ts` in the site's own style (orb, soft gradients, Geist) and rendered with resvg. Every page and every blog post gets one. Tags are written in `src/layouts/BaseLayout.astro`. `@astrojs/sitemap` writes the sitemap, `public/robots.txt` points to it, and the homepage has a schema.org `Person` built from `src/site.ts`. No paid service. Test: `tests/home-and-meta.spec.js`.
+
 ### Library
 
 **Requirement.** A library page inspired by https://jackraines.blog/library, but clearly distinct from that single dated list. Tabs:
@@ -100,7 +116,7 @@ The page is distinct from jackraines.blog/library because that page is one chron
 
 **Status.** Shipped, pull requests #5 and #6.
 
-**How it is fulfilled.** `.github/workflows/library.yml` runs at 07:15 UTC and on manual dispatch. `scripts/library/update.mjs` writes JSON through `scripts/library/store.mjs`, which skips the write when the payload matches the file (`fetchedAt` does not count as a change). The workflow commits only when `git diff` is non-empty. Fetchers throw if Goodreads or Letterboxd return nothing, so a bad response does not replace real data with an empty list. YouTube may be a real empty playlist. That empty list is what the feed returned on 2026-11-26, not a placeholder.
+**How it is fulfilled.** `.github/workflows/library.yml` runs at 07:15 UTC and on manual dispatch. `scripts/library/update.mjs` writes JSON through `scripts/library/store.mjs`, which skips the write when the payload matches the file (`fetchedAt` does not count as a change). The workflow commits only when `git diff` is non-empty, then starts `deploy.yml` so the live site picks up the change. The fetch runs in a read-only job. Only a second job, which installs no npm packages, can push. Feed links and images must be on the expected Goodreads, Letterboxd, or YouTube hosts (`safeUrl` in `scripts/library/text.mjs`). Fetchers throw if Goodreads or Letterboxd return nothing, so a bad response does not replace real data with an empty list. YouTube may be a real empty playlist. That empty list is what the feed returned on 2026-11-26, not a placeholder.
 
 ### Free hosting only
 
@@ -108,7 +124,7 @@ The page is distinct from jackraines.blog/library because that page is one chron
 
 **Status.** In force.
 
-**How it is fulfilled.** Deploy is `.github/workflows/deploy.yml` to GitHub Pages. Canonical URL is `https://michaelbrady4.github.io` (`astro.config.mjs`, `src/site.ts`). Library inputs are public RSS and widget URLs. Dependencies are Astro and Playwright only (`package.json`).
+**How it is fulfilled.** Deploy is `.github/workflows/deploy.yml` to GitHub Pages. Canonical URL is `https://michaelbrady4.github.io` (`astro.config.mjs`, `src/site.ts`). Library inputs are public RSS and widget URLs. Dependencies are Astro, `@astrojs/sitemap`, `@resvg/resvg-js` for build-time preview images, and Playwright for tests (`package.json`). All are free and open source.
 
 ### X bookmarks shelf
 
@@ -145,11 +161,15 @@ The page is distinct from jackraines.blog/library because that page is one chron
 
 ## Open ideas
 
-**Writings.** Host the posts on this site. Use Substack or beehiiv only as the email list. Cross-posts should point back to the canonical post here. The blog route and Markdown collection already exist (`src/content.config.ts`, `src/lib/posts.ts`). There is no email-provider integration in the repo.
+**Writings.** Michael wants to keep the Blog in the nav and plan a first post (2026-11-27). Host the posts on this site. Use Substack or beehiiv only as the email list. Cross-posts should point back to the canonical post here. The blog route and Markdown collection already exist (`src/content.config.ts`, `src/lib/posts.ts`). There is no email-provider integration in the repo.
 
 Other ideas belong in this section only after Michael asks for them. Do not treat this list as approval to build.
 
 ## Changelog
+
+### 2026-11-27
+
+- Site review follow-up. The nightly library job now starts the Pages deploy after it commits, and runs npm with a read-only token. Feed links are limited to the Goodreads, Letterboxd, and YouTube hosts. Library covers load lazily and fall back to a plain tile. Astro updated to 7.4.13, which clears the moderate audit advisories. Social preview images, Twitter card tags, a sitemap, robots.txt, and Person structured data added. Homepage Lately strip and page crossfades added. Playwright starts the preview server in the foreground under a coding agent.
 
 ### 2026-11-26
 
