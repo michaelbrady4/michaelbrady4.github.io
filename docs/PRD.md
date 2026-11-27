@@ -169,6 +169,7 @@ Other ideas belong in this section only after Michael asks for them. Do not trea
 
 ### 2026-11-27
 
+- Bio, first paragraph: "so I like getting into the technical details" became "Before product, I spent my time in data science and software engineering, and I still like knowing how things work under the hood." Michael chose the wording.
 - Library tabs renamed from Reading and Watching to Books and Movies, to sit alongside YouTube. Addresses are now `#books` and `#movies`. Old links still work.
 - Bio rewritten shorter and plainer, about 70 words instead of about 190. The focus moved from AI assistants to why some software clicks with people. Same facts, nothing added.
 - Site review follow-up. The nightly library job now starts the Pages deploy after it commits, and runs npm with a read-only token. Feed links are limited to the Goodreads, Letterboxd, and YouTube hosts. Library covers load lazily and fall back to a plain tile. Astro updated to 7.4.13, which clears the moderate audit advisories. Social preview images, Twitter card tags, a sitemap, robots.txt, and Person structured data added. Homepage Lately strip and page crossfades added. Playwright starts the preview server in the foreground under a coding agent.

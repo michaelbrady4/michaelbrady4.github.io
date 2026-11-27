@@ -8,7 +8,7 @@ export const site = {
   role: 'AI Product Manager at C3 AI',
   email: 'mb.bradymike@gmail.com',
   bio: [
-    'I’m a product manager at C3 AI, where I work on agentic AI products. My background is in data science and software engineering, so I like getting into the technical details.',
+    'I’m a product manager at C3 AI, where I work on agentic AI products. Before product, I spent my time in data science and software engineering, and I still like knowing how things work under the hood.',
     'I’m always trying new software, and I pay attention to why some of it just clicks. Most of the time it comes down to a few small decisions that make it feel right to use.',
     'I have a master’s in Computer Science from CU Boulder, and bachelor’s degrees in Computer Science and Business Administration from Hood College.',
   ],
