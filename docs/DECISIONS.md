@@ -50,6 +50,10 @@ Michael considered Raindrop.io as a place to keep saved links and declined it. T
 
 Letterboxd's RSS order is publish order, which put Primetime (watched 2026-10-22) above You Can See Everything (watched 2026-11-22). Pull request #6 sorts in `sortFilms` (`scripts/library/letterboxd.mjs`) by `letterboxd:watchedDate`, newest first. If that date is missing, the sort uses `pubDate`. The watched date is shown on the row in `src/pages/library/index.astro`. `src/data/library/watching.json` was regenerated in that order.
 
+## 2026-11-27: Library tabs are Books, Movies, and YouTube
+
+Michael renamed the tabs so all three name what is on the shelf, instead of two activities and a platform. He chose Movies over Films for the tab, and asked to keep "films" inside the tab ("Recent films") and in the page subtitle, matching Letterboxd. The YouTube tab stays visible while the playlist is empty. Tab ids and hashes became `books` and `movies`. `#reading` and `#watching` are aliases, so older links and the earlier homepage Lately links still land on the right tab. This replaces the 2026-11-26 entry below that made Reading the default: the default is now Books.
+
 ## 2026-11-27: Shorter bio, less about AI assistants
 
 Michael asked for a bio that sounds less generated and is shorter. It went from four paragraphs to three, kept only facts already in the old bio, and dropped list-of-three phrasing. He asked to move the focus off AI assistants and onto why some software connects with people and feels better to use.
@@ -80,4 +84,4 @@ Astro 7 starts `astro preview` in the background when it detects a coding agent.
 
 ## 2026-11-26: Reading is the default library tab
 
-After From X was removed, `/library/` opens on Reading (`data-tab="reading"` in `src/pages/library/index.astro`). Watching and YouTube stay one hash away (`#watching`, `#youtube`).
+After From X was removed, `/library/` opens on Reading (`data-tab="reading"` in `src/pages/library/index.astro`). Watching and YouTube stay one hash away (`#watching`, `#youtube`). Superseded on 2026-11-27: the tabs are now Books, Movies, and YouTube, and Books is the default.

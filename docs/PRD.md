@@ -94,15 +94,15 @@ Current projects:
 
 **Requirement.** A library page inspired by https://jackraines.blog/library, but clearly distinct from that single dated list. Tabs:
 
-- **Reading.** Goodreads user `143360526`. Shelf RSS was retired in October 2026, so the job uses the public bookshelf widget when RSS is not XML.
-- **Watching.** Letterboxd user `michaelb4`, from the RSS at `https://letterboxd.com/michaelb4/rss/` (short link `https://boxd.it/5EEPT`). Sorted by watched date, newest first.
+- **Books.** Goodreads user `143360526`. Shelf RSS was retired in October 2026, so the job uses the public bookshelf widget when RSS is not XML.
+- **Movies.** Letterboxd user `michaelb4`, from the RSS at `https://letterboxd.com/michaelb4/rss/` (short link `https://boxd.it/5EEPT`). Sorted by watched date, newest first.
 - **YouTube.** Public playlist `PLD8-d1TMwYyA`, title Website. The playlist RSS shows at most the latest 15 videos. The playlist currently has no videos.
 
 **Status.** Shipped. Library in pull request #5 (2026-11-26). Watched-date sort and Reading as the default tab in pull request #6 (2026-11-26).
 
 **How it is fulfilled.**
 
-- Page: `src/pages/library/index.astro`. Tabs are `reading`, `watching`, `youtube`. With no hash, `data-tab` is `reading`.
+- Page: `src/pages/library/index.astro`. Tabs are `books`, `movies`, `youtube`, labeled Books, Movies, and YouTube. With no hash, `data-tab` is `books`. The old `#reading` and `#watching` hashes still open the right tab. Text inside the Movies tab keeps Letterboxd's word, films ("Recent films"), and so does the page subtitle.
 - Reading data: `src/data/library/reading.json` (`"source": "widget"`, 1 currently reading, 12 read). Fetch: `scripts/library/goodreads.mjs` (RSS first, widget fallback).
 - Watching data: `src/data/library/watching.json` (7 films). Fetch and sort: `scripts/library/letterboxd.mjs` (`sortFilms`). The row shows `watchedDate` via `formatDate` in `src/lib/dates.ts`.
 - YouTube data: `src/data/library/youtube.json` (`playlistId` `PLD8-d1TMwYyA`, `playlistTitle` `Website`, `videos` empty). Fetch: `scripts/library/youtube.mjs`. The script does not trim the feed. YouTube's own playlist feed returns at most 15 entries. Empty state: "No videos yet." plus "Open the playlist".
@@ -169,6 +169,7 @@ Other ideas belong in this section only after Michael asks for them. Do not trea
 
 ### 2026-11-27
 
+- Library tabs renamed from Reading and Watching to Books and Movies, to sit alongside YouTube. Addresses are now `#books` and `#movies`. Old links still work.
 - Bio rewritten shorter and plainer, about 70 words instead of about 190. The focus moved from AI assistants to why some software clicks with people. Same facts, nothing added.
 - Site review follow-up. The nightly library job now starts the Pages deploy after it commits, and runs npm with a read-only token. Feed links are limited to the Goodreads, Letterboxd, and YouTube hosts. Library covers load lazily and fall back to a plain tile. Astro updated to 7.4.13, which clears the moderate audit advisories. Social preview images, Twitter card tags, a sitemap, robots.txt, and Person structured data added. Homepage Lately strip and page crossfades added. Playwright starts the preview server in the foreground under a coding agent.
 

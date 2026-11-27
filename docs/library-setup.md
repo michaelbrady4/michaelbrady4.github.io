@@ -4,8 +4,8 @@ Product requirements, architecture, and past choices are in [PRD.md](PRD.md), [A
 
 The library page has three shelves.
 
-- **Reading** is your Goodreads shelf.
-- **Watching** is your recent Letterboxd diary, newest watch first.
+- **Books** is your Goodreads shelf.
+- **Movies** is your recent Letterboxd diary, newest watch first.
 - **YouTube** is a public playlist.
 
 None of these need a secret. Nothing on the page is made up.
@@ -16,7 +16,7 @@ The job only keeps links and images on the hosts each service really uses (Goodr
 
 If main is protected, allow GitHub Actions to update it, or the shelves will not refresh. In the repo, that setting is under **Settings → Rules → Rulesets** (or branch protection): permit the `github-actions` bot, or the Actions token, to bypass the rule.
 
-## Reading and watching
+## Books and movies
 
 **Goodreads.** The job requests the public shelf feeds:
 
