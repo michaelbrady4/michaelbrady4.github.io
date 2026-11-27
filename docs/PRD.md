@@ -8,7 +8,7 @@ This is Michael Brady's personal site: [https://michaelbrady4.github.io](https:/
 
 Michael is an AI product manager at C3 AI (`src/site.ts`). The site is a personal brand for a move into consumer AI, aimed at people in San Francisco and New York. It should show the work, the taste, and the writing, in his voice.
 
-The homepage bio is the public introduction. It is four paragraphs in `src/site.ts`: the C3 AI role, agentic products, interest in AI assistants, and degrees from the University of Colorado Boulder and Hood College.
+The homepage bio is the public introduction. It is three short paragraphs in `src/site.ts`: the C3 AI role and agentic products with a data science and engineering background, an interest in why some software clicks with people, and degrees from the University of Colorado Boulder and Hood College. The first paragraph is also the default meta description.
 
 ## Requirements
 
@@ -169,6 +169,7 @@ Other ideas belong in this section only after Michael asks for them. Do not trea
 
 ### 2026-11-27
 
+- Bio rewritten shorter and plainer, about 70 words instead of about 190. The focus moved from AI assistants to why some software clicks with people. Same facts, nothing added.
 - Site review follow-up. The nightly library job now starts the Pages deploy after it commits, and runs npm with a read-only token. Feed links are limited to the Goodreads, Letterboxd, and YouTube hosts. Library covers load lazily and fall back to a plain tile. Astro updated to 7.4.13, which clears the moderate audit advisories. Social preview images, Twitter card tags, a sitemap, robots.txt, and Person structured data added. Homepage Lately strip and page crossfades added. Playwright starts the preview server in the foreground under a coding agent.
 
 ### 2026-11-26
