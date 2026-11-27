@@ -50,6 +50,10 @@ Michael considered Raindrop.io as a place to keep saved links and declined it. T
 
 Letterboxd's RSS order is publish order, which put Primetime (watched 2026-10-22) above You Can See Everything (watched 2026-11-22). Pull request #6 sorts in `sortFilms` (`scripts/library/letterboxd.mjs`) by `letterboxd:watchedDate`, newest first. If that date is missing, the sort uses `pubDate`. The watched date is shown on the row in `src/pages/library/index.astro`. `src/data/library/watching.json` was regenerated in that order.
 
+## 2026-11-27: Shorter bio, less about AI assistants
+
+Michael asked for a bio that sounds less generated and is shorter. It went from four paragraphs to three, kept only facts already in the old bio, and dropped list-of-three phrasing. He asked to move the focus off AI assistants and onto why some software connects with people and feels better to use.
+
 ## 2026-11-27: Nightly library job starts the deploy, in two jobs
 
 GitHub does not start other workflows from a push made with `GITHUB_TOKEN`. The library job pushed new data to `main`, but `deploy.yml` never ran, so the live site would have stayed on old data. The job now runs `gh workflow run deploy.yml` after a commit (`actions: write`). It was also split: `fetch` installs npm packages with a read-only token, and `publish` commits with write access and installs nothing, so a bad dependency cannot push to `main`.
