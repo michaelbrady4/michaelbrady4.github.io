@@ -5,6 +5,7 @@
 export const site = {
   name: 'Michael Brady',
   url: 'https://michaelbrady4.github.io',
+  role: 'AI Product Manager at C3 AI',
   email: 'mb.bradymike@gmail.com',
   bio: [
     'I’m Michael, an AI Product Manager at C3 AI with a background in data science and software engineering.',

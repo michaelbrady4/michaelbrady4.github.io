@@ -11,7 +11,8 @@ export default defineConfig({
     ...devices['Desktop Chrome'],
   },
   webServer: {
-    command: 'npm run build && npm run preview',
+    // --ignore-lock keeps Astro 7 from moving the server to the background when it detects a coding agent.
+    command: 'npm run build && npm run preview -- --ignore-lock',
     url: 'http://127.0.0.1:4321',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,

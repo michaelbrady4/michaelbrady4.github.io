@@ -50,6 +50,30 @@ Michael considered Raindrop.io as a place to keep saved links and declined it. T
 
 Letterboxd's RSS order is publish order, which put Primetime (watched 2026-10-22) above You Can See Everything (watched 2026-11-22). Pull request #6 sorts in `sortFilms` (`scripts/library/letterboxd.mjs`) by `letterboxd:watchedDate`, newest first. If that date is missing, the sort uses `pubDate`. The watched date is shown on the row in `src/pages/library/index.astro`. `src/data/library/watching.json` was regenerated in that order.
 
+## 2026-11-27: Nightly library job starts the deploy, in two jobs
+
+GitHub does not start other workflows from a push made with `GITHUB_TOKEN`. The library job pushed new data to `main`, but `deploy.yml` never ran, so the live site would have stayed on old data. The job now runs `gh workflow run deploy.yml` after a commit (`actions: write`). It was also split: `fetch` installs npm packages with a read-only token, and `publish` commits with write access and installs nothing, so a bad dependency cannot push to `main`.
+
+## 2026-11-27: Feed links are limited to known hosts
+
+`safeUrl` in `scripts/library/text.mjs` keeps only http and https links on the Goodreads, Letterboxd, and their image hosts, so a feed cannot put a `javascript:` link or an off-site image on the page. Astro escapes attributes but does not block those schemes.
+
+## 2026-11-27: Social preview images are SVG rendered by resvg
+
+Satori was tried first. It pulled in `fflate` with a moderate advisory, so the cards are a hand-written SVG in `src/lib/og.ts` rendered by `@resvg/resvg-js`. resvg needs TTF, so Geist Regular and SemiBold TTF from the `geist` npm package (SIL OFL) are committed in `src/og/fonts/`. Installing `geist` itself was avoided because it lists Next.js as a peer dependency. The cards use the light palette.
+
+## 2026-11-27: Homepage Lately strip from library data
+
+Michael asked for a small "now" signal on the homepage. It reads the committed library JSON instead of new data, so it follows the rule against invented rows and updates with the nightly job.
+
+## 2026-11-27: Native view transitions, not the Astro router
+
+Page crossfades use CSS `@view-transition` with no JavaScript. Astro's `ClientRouter` would swap the `<html>` element, which resets `data-theme` and re-runs inline scripts, so the theme and library tab code would need extra handling. Browsers without support navigate as before.
+
+## 2026-11-27: Playwright preview server uses `--ignore-lock`
+
+Astro 7 starts `astro preview` in the background when it detects a coding agent. Playwright then saw the process exit and stopped with "Process from config.webServer exited early". `--ignore-lock` is Astro's documented way to keep it in the foreground. Only `playwright.config.js` uses it. `npm run preview` is unchanged.
+
 ## 2026-11-26: Reading is the default library tab
 
 After From X was removed, `/library/` opens on Reading (`data-tab="reading"` in `src/pages/library/index.astro`). Watching and YouTube stay one hash away (`#watching`, `#youtube`).

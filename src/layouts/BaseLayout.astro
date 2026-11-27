@@ -3,15 +3,23 @@ import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { site } from '../site';
+import { OG_HEIGHT, OG_WIDTH, ogImagePath } from '../lib/og';
 
 interface Props {
   title?: string;
   description?: string;
+  /** Path to a 1200x630 preview image. Defaults to the generated card for this page. */
+  ogImage?: string;
+  /** Extra JSON-LD for search engines, written as a script tag in the head. */
+  jsonLd?: Record<string, unknown>;
 }
 
-const { title, description = site.bio[0] } = Astro.props;
+const { title, description = site.bio[0], ogImage, jsonLd } = Astro.props;
 const pageTitle = title ? `${title} · ${site.name}` : site.name;
 const canonical = new URL(Astro.url.pathname, site.url);
+const image = new URL(ogImage ?? ogImagePath(Astro.url.pathname), site.url);
+const imageAlt = title ? `${title}, ${site.name}` : `${site.name}, ${site.role}`;
+const xHandle = `@${new URL(site.links.x).pathname.replace(/\//g, '')}`;
 ---
 
 <!doctype html>
@@ -49,10 +57,21 @@ const canonical = new URL(Astro.url.pathname, site.url);
       })();
     </script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content={String(OG_WIDTH)} />
+    <meta property="og:image:height" content={String(OG_HEIGHT)} />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content={xHandle} />
+    <meta name="twitter:image" content={image} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\\u003c')} />}
   </head>
   <body>
     <a class="skip-link" href="#content">Skip to content</a>

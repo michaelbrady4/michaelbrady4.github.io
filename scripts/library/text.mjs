@@ -45,3 +45,22 @@ export function domainOf(url) {
     return '';
   }
 }
+
+/**
+ * Return the URL as an https string when it points at one of `hosts` (or a subdomain).
+ * Anything else, including javascript: and data: links, returns null.
+ */
+export function safeUrl(value, hosts) {
+  let url;
+  try {
+    url = new URL(String(value ?? '').trim());
+  } catch {
+    return null;
+  }
+  if (url.protocol !== 'https:' && url.protocol !== 'http:') return null;
+  if (url.username || url.password) return null;
+  const host = url.hostname.toLowerCase();
+  if (!hosts.some((allowed) => host === allowed || host.endsWith(`.${allowed}`))) return null;
+  url.protocol = 'https:';
+  return url.href;
+}

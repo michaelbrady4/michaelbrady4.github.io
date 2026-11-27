@@ -4,11 +4,28 @@ import headshot from '../assets/michael.jpg';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SocialLinks from '../components/SocialLinks.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import Lately from '../components/Lately.astro';
 import { projects } from '../projects';
 import { site } from '../site';
+
+// Facts here come from the bio in src/site.ts.
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  url: site.url,
+  image: new URL(headshot.src, site.url).href,
+  jobTitle: 'AI Product Manager',
+  worksFor: { '@type': 'Organization', name: 'C3 AI' },
+  alumniOf: [
+    { '@type': 'CollegeOrUniversity', name: 'University of Colorado Boulder' },
+    { '@type': 'CollegeOrUniversity', name: 'Hood College' },
+  ],
+  sameAs: [site.links.x, site.links.linkedin],
+};
 ---
 
-<BaseLayout>
+<BaseLayout jsonLd={person}>
   <section class="intro reveal">
     <div class="portrait-wrap">
       <Image
@@ -31,6 +48,7 @@ import { site } from '../site';
       <SocialLinks />
     </div>
   </section>
+  <Lately />
   <section class="project-preview" aria-labelledby="selected-projects">
     <div class="project-preview-head reveal">
       <h2 id="selected-projects">Selected projects</h2>

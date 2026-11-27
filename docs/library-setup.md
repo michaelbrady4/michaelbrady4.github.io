@@ -10,7 +10,9 @@ The library page has three shelves.
 
 None of these need a secret. Nothing on the page is made up.
 
-A GitHub Action named **Update library** runs every night at 7:15 UTC. You can also run it by hand from the Actions tab. It commits `reading.json`, `watching.json`, and `youtube.json` when they change. It leaves `youtube.json` alone when the playlist id is blank.
+A GitHub Action named **Update library** runs every night at 7:15 UTC. You can also run it by hand from the Actions tab. It commits `reading.json`, `watching.json`, and `youtube.json` when they change, then starts **Deploy to GitHub Pages** so the live site shows the new data. It leaves `youtube.json` alone when the playlist id is blank.
+
+The job only keeps links and images on the hosts each service really uses (Goodreads and gr-assets, Letterboxd and ltrbxd, YouTube). Anything else in a feed is dropped.
 
 If main is protected, allow GitHub Actions to update it, or the shelves will not refresh. In the repo, that setting is under **Settings → Rules → Rulesets** (or branch protection): permit the `github-actions` bot, or the Actions token, to bypass the rule.
 
