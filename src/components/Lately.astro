@@ -29,7 +29,7 @@ if (book) {
     label: reading.currentlyReading.length ? 'Reading' : 'Last read',
     title: book.title,
     meta: book.author || undefined,
-    href: '/library/#reading',
+    href: '/library/#books',
     icon: 'book',
   });
 }
@@ -40,7 +40,7 @@ if (film) {
     title: film.title,
     meta: film.watchedDate ? formatDate(new Date(`${film.watchedDate}T00:00:00Z`)) : undefined,
     rating: film.rating,
-    href: '/library/#watching',
+    href: '/library/#movies',
     icon: 'film',
   });
 }

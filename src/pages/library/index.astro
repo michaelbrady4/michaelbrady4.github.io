@@ -20,8 +20,8 @@ const readingCount = reading.currentlyReading.length + reading.read.length;
 const watchingCount = watching.films.length;
 
 const tabs = [
-  { id: 'reading', label: 'Reading', count: readingCount },
-  { id: 'watching', label: 'Watching', count: watchingCount },
+  { id: 'books', label: 'Books', count: readingCount },
+  { id: 'movies', label: 'Movies', count: watchingCount },
   { id: 'youtube', label: 'YouTube', count: videos.length },
 ];
 
@@ -40,15 +40,19 @@ function added(value: string) {
 ---
 
 <BaseLayout title="Library" description="Books, films, and videos from Michael Brady.">
-  <div class="page library" id="library" data-tab="reading">
+  <div class="page library" id="library" data-tab="books">
     <script is:inline>
       (function () {
         var root = document.getElementById('library');
         if (!root) return;
+        // Old links used #reading and #watching. They still open the right tab.
+        var aliases = { reading: 'books', watching: 'movies' };
         var hash = (location.hash || '').replace('#', '');
-        var known = hash === 'reading' || hash === 'watching' || hash === 'youtube';
+        var name = aliases[hash] || hash;
+        var known = name === 'books' || name === 'movies' || name === 'youtube';
+        if (known && name !== hash) history.replaceState(null, '', '#' + name);
         root.classList.add('is-tabbed');
-        root.setAttribute('data-tab', known ? hash : 'reading');
+        root.setAttribute('data-tab', known ? name : 'books');
       })();
     </script>
     <header class="page-heading reveal">
@@ -65,8 +69,8 @@ function added(value: string) {
             id={`tab-${tab.id}`}
             data-tab-target={tab.id}
             aria-controls={`panel-${tab.id}`}
-            aria-selected={tab.id === 'reading' ? 'true' : 'false'}
-            tabindex={tab.id === 'reading' ? 0 : -1}
+            aria-selected={tab.id === 'books' ? 'true' : 'false'}
+            tabindex={tab.id === 'books' ? 0 : -1}
           >
             <span>{tab.label}</span>
             <span class="library-count">{tab.count}</span>
@@ -83,8 +87,14 @@ function added(value: string) {
           return tab.getAttribute('data-tab-target');
         });
 
+        var aliases = { reading: 'books', watching: 'movies' };
+
         function select(name, focus, updateHash) {
-          if (order.indexOf(name) === -1) name = 'reading';
+          if (aliases[name]) {
+            name = aliases[name];
+            updateHash = true;
+          }
+          if (order.indexOf(name) === -1) name = 'books';
           root.setAttribute('data-tab', name);
           tabs.forEach(function (tab) {
             var on = tab.getAttribute('data-tab-target') === name;
@@ -117,12 +127,12 @@ function added(value: string) {
           select(location.hash.replace('#', ''), false, false);
         });
 
-        select(root.getAttribute('data-tab') || 'reading', false, false);
+        select(root.getAttribute('data-tab') || 'books', false, false);
       })();
     </script>
 
-    <section class="library-panel" id="panel-reading" data-panel="reading" role="tabpanel" aria-labelledby="tab-reading">
-      <h2 class="library-panel-title">Reading</h2>
+    <section class="library-panel" id="panel-books" data-panel="books" role="tabpanel" aria-labelledby="tab-books">
+      <h2 class="library-panel-title">Books</h2>
       {
         readingCount === 0 ? (
           <div class="library-empty">
@@ -216,8 +226,8 @@ function added(value: string) {
       }
     </section>
 
-    <section class="library-panel" id="panel-watching" data-panel="watching" role="tabpanel" aria-labelledby="tab-watching">
-      <h2 class="library-panel-title">Watching</h2>
+    <section class="library-panel" id="panel-movies" data-panel="movies" role="tabpanel" aria-labelledby="tab-movies">
+      <h2 class="library-panel-title">Movies</h2>
       {
         watching.films.length === 0 ? (
           <div class="library-empty">

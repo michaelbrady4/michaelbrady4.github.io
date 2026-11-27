@@ -30,8 +30,8 @@ test('library is in the nav and the three shelves are tabs', async ({ page }) =>
 
   const tabs = page.getByRole('tab');
   await expect(tabs).toHaveCount(3);
-  await expect(tabs.nth(0)).toHaveText(/Reading/);
-  await expect(tabs.nth(1)).toHaveText(/Watching/);
+  await expect(tabs.nth(0)).toHaveText(/Books/);
+  await expect(tabs.nth(1)).toHaveText(/Movies/);
   await expect(tabs.nth(2)).toHaveText(/YouTube/);
   await expect(tabs.nth(0)).toHaveAttribute('aria-selected', 'true');
   await expect(page.getByRole('tab', { name: /From X/ })).toHaveCount(0);
@@ -44,7 +44,7 @@ test('library is in the nav and the three shelves are tabs', async ({ page }) =>
 
 test('reading shelf shows the Goodreads data', async ({ page }) => {
   await page.goto('/library/');
-  await expect(page.getByRole('tab', { name: /^Reading/ })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('tab', { name: /^Books/ })).toHaveAttribute('aria-selected', 'true');
   await expect(page.getByRole('link', { name: 'Goodreads profile' })).toHaveAttribute('href', reading.profileUrl);
 
   if (reading.currentlyReading.length) {
@@ -80,12 +80,12 @@ test('reading shelf shows the Goodreads data', async ({ page }) => {
 
 test('watching shelf shows the Letterboxd diary', async ({ page }) => {
   await page.goto('/library/');
-  await page.getByRole('tab', { name: /^Watching/ }).click();
-  await expect(page).toHaveURL(/#watching$/);
+  await page.getByRole('tab', { name: /^Movies/ }).click();
+  await expect(page).toHaveURL(/#movies$/);
   await expect(page.getByRole('link', { name: 'Letterboxd profile' })).toHaveAttribute('href', watching.profileUrl);
   await expect(page.getByRole('heading', { name: 'Recent films' })).toBeVisible();
 
-  const titles = (await page.locator('#panel-watching h3').allTextContents()).map((title) => title.trim());
+  const titles = (await page.locator('#panel-movies h3').allTextContents()).map((title) => title.trim());
   expect(titles).toEqual(watching.films.map((film) => film.title));
   const watched = watching.films.map((film) => film.watchedDate).filter(Boolean);
   expect(watched).toEqual([...watched].sort((a, b) => b.localeCompare(a)));
@@ -150,14 +150,24 @@ test('youtube shelf follows the playlist file', async ({ page }) => {
 
 test('arrow keys move between shelves', async ({ page }) => {
   await page.goto('/library/');
-  await page.getByRole('tab', { name: /^Reading/ }).focus();
+  await page.getByRole('tab', { name: /^Books/ }).focus();
   await expect(page.getByRole('heading', { name: 'Currently reading' })).toBeVisible();
   await page.keyboard.press('ArrowRight');
-  await expect(page.getByRole('tab', { name: /^Watching/ })).toBeFocused();
+  await expect(page.getByRole('tab', { name: /^Movies/ })).toBeFocused();
   await expect(page.getByRole('heading', { name: 'Recent films' })).toBeVisible();
   await page.keyboard.press('ArrowRight');
   await expect(page.getByRole('tab', { name: /^YouTube/ })).toBeFocused();
   if (!youtube.videos?.length) {
     await expect(page.getByRole('heading', { name: 'No videos yet.' })).toBeVisible();
   }
+});
+
+test('old #reading and #watching links open the renamed tabs', async ({ page }) => {
+  await page.goto('/library/#watching');
+  await expect(page.getByRole('tab', { name: /^Movies/ })).toHaveAttribute('aria-selected', 'true');
+  await expect(page).toHaveURL(/#movies$/);
+
+  await page.goto('/library/#reading');
+  await expect(page.getByRole('tab', { name: /^Books/ })).toHaveAttribute('aria-selected', 'true');
+  await expect(page).toHaveURL(/#books$/);
 });

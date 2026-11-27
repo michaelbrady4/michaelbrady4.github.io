@@ -8,7 +8,7 @@ The site is a static [Astro](https://astro.build) project. GitHub Pages hosts it
 
 - Home, with a short bio, a Lately strip (current book and latest film from the library), and a Selected projects preview
 - [Projects](https://michaelbrady4.github.io/projects/)
-- [Library](https://michaelbrady4.github.io/library/): Reading, Watching, and YouTube
+- [Library](https://michaelbrady4.github.io/library/): Books, Movies, and YouTube
 - [Blog](https://michaelbrady4.github.io/blog/): Markdown posts, empty until one is added
 
 ## Run locally

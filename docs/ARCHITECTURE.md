@@ -42,7 +42,7 @@ tests/                           Playwright
 | --- | --- | --- |
 | `/` | `src/pages/index.astro` | Portrait, bio from `src/site.ts`, social links, Selected projects |
 | `/projects/` | `src/pages/projects/index.astro` | Every project in `src/projects.ts` |
-| `/library/` | `src/pages/library/index.astro` | Tabs: Reading, Watching, YouTube. Default is Reading. |
+| `/library/` | `src/pages/library/index.astro` | Tabs: Books, Movies, YouTube (`#books`, `#movies`, `#youtube`). Default is Books. Old `#reading` and `#watching` links open Books and Movies and the address is updated. |
 | `/blog/` | `src/pages/blog/index.astro` | Post list, or "Posts coming soon." |
 | `/blog/<slug>/` | `src/pages/blog/[...slug].astro` | One Markdown post |
 | 404 | `src/pages/404.astro` | Missing page |
@@ -55,7 +55,7 @@ tests/                           Playwright
 
 `StarRating.astro` draws 0 to 5 stars, including halves, for books and films. Pass `as="span"` when the stars sit inside inline content such as a link.
 
-`Lately.astro` is the homepage strip between the bio and Selected projects. It reads the same JSON as `/library/`: the first currently reading book (or the latest read book), the first film in `watching.json`, and the first YouTube video when the playlist has one. Each card links to its library tab (`/library/#reading`, `#watching`, `#youtube`). A shelf with no rows is left out, and the section is not rendered when all three are empty.
+`Lately.astro` is the homepage strip between the bio and Selected projects. It reads the same JSON as `/library/`: the first currently reading book (or the latest read book), the first film in `watching.json`, and the first YouTube video when the playlist has one. Each card links to its library tab (`/library/#books`, `#movies`, `#youtube`). A shelf with no rows is left out, and the section is not rendered when all three are empty.
 
 ## Styling and theme
 
@@ -113,7 +113,7 @@ Library covers are hotlinked from Goodreads, Letterboxd, and YouTube with `loadi
 
 - `tests/theme-toggle.spec.js`: theme icon contrast on `/`, `/blog/`, `/projects/`, `/library/`, and the empty blog state.
 - `tests/projects.spec.js`: live links, Code links on public cards, no GitHub link on Lorémon or the wedding card, homepage preview.
-- `tests/library.spec.js`: three tabs, Reading selected by default, Goodreads rows, Letterboxd order and watched dates, YouTube empty state and playlist link, arrow keys between tabs. Cover requests are answered with a 1x1 PNG so the tests never depend on Goodreads, Letterboxd, or YouTube.
+- `tests/library.spec.js`: three tabs, Books selected by default, old `#reading` and `#watching` links, Goodreads rows, Letterboxd order and watched dates, YouTube empty state and playlist link, arrow keys between tabs. Cover requests are answered with a 1x1 PNG so the tests never depend on Goodreads, Letterboxd, or YouTube.
 - `tests/home-and-meta.spec.js`: the Lately strip and its tab links, preview image tags and PNG size on each page, the homepage JSON-LD, robots.txt, the sitemap, and lazy covers with the broken-cover fallback.
 - `scripts/library/feeds.test.mjs`, `sanitize-url.test.mjs`, `safe-url.test.mjs`, `youtube.test.mjs`: parser and URL tests. `npm run test:unit`.
 

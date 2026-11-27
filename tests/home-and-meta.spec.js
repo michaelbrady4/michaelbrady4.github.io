@@ -16,14 +16,14 @@ test('homepage Lately strip shows the latest book and film from the library data
   const book = reading.currentlyReading[0] ?? reading.read[0];
   if (book) {
     const link = lately.getByRole('link', { name: new RegExp(book.title) });
-    await expect(link).toHaveAttribute('href', '/library/#reading');
+    await expect(link).toHaveAttribute('href', '/library/#books');
     await expect(link).toContainText(reading.currentlyReading.length ? 'Reading' : 'Last read');
   }
 
   const film = watching.films[0];
   if (film) {
     const link = lately.getByRole('link', { name: new RegExp(film.title) });
-    await expect(link).toHaveAttribute('href', '/library/#watching');
+    await expect(link).toHaveAttribute('href', '/library/#movies');
     await expect(link).toContainText('Last watched');
     if (film.rating) {
       await expect(link.getByRole('img', { name: `Rated ${film.rating} out of 5` })).toBeVisible();
@@ -36,9 +36,9 @@ test('homepage Lately strip shows the latest book and film from the library data
 
 test('Lately links open the matching library tab', async ({ page }) => {
   await page.goto('/');
-  await page.locator('section.lately a[href="/library/#watching"]').click();
-  await expect(page).toHaveURL(/\/library\/#watching$/);
-  await expect(page.getByRole('tab', { name: /^Watching/ })).toHaveAttribute('aria-selected', 'true');
+  await page.locator('section.lately a[href="/library/#movies"]').click();
+  await expect(page).toHaveURL(/\/library\/#movies$/);
+  await expect(page.getByRole('tab', { name: /^Movies/ })).toHaveAttribute('aria-selected', 'true');
 });
 
 for (const [path, image] of [
@@ -97,7 +97,7 @@ test('library covers load lazily and fall back to a plain tile when they fail', 
   }
   const covers = reading.currentlyReading.filter((b) => b.cover).length;
   if (covers) {
-    await expect(page.locator('#panel-reading .library-row.is-current .library-media-fallback')).toHaveCount(
+    await expect(page.locator('#panel-books .library-row.is-current .library-media-fallback')).toHaveCount(
       reading.currentlyReading.length,
     );
   }
